@@ -1,0 +1,988 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#F7F5F0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="HowSo">
+<title>HowSo 好瘦生活</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&family=Noto+Sans+TC:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: one 480px-max phone column; hero card, Today's Plan list, journey strip; fixed 5-tab bar; every log is a bottom sheet. */
+:root{
+  --cream:#F7F5F0;--paper:#FDFCF9;--sand:#E8E2D8;--hairline:#E3DDD2;
+  --ink:#30312F;--ink-muted:#5F615A;--sage:#A8ADA3;--sage-deep:#5E6659;
+  --clay:#C5795E;--clay-deep:#9A553F;--clay-soft:#F2E5DC;--on-clay:#FFFFFF;
+  --scrim:rgba(48,49,47,.32);
+  --shadow-card:0 1px 2px rgba(48,49,47,.04),0 10px 28px rgba(48,49,47,.05);
+  --shadow-nav:0 -1px 0 rgba(48,49,47,.07);
+  --font-sans:"Manrope","Noto Sans TC",system-ui,sans-serif;
+  --font-cjk:"Noto Sans TC","Manrope",system-ui,sans-serif;
+  --r-sm:10px;--r-md:18px;--r-lg:28px;--pill:999px;
+  --dur-fast:160ms;--dur-base:280ms;
+  --nav-h:64px;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --cream:#1C1B19;--paper:#252421;--sand:#34312D;--hairline:#36332E;
+  --ink:#EEEAE3;--ink-muted:#A9A69F;--sage:#7F857B;--sage-deep:#B4BBAE;
+  --clay:#D48A6E;--clay-deep:#D48A6E;--clay-soft:#3A2B24;--on-clay:#1C1B19;
+  --scrim:rgba(0,0,0,.55);--shadow-card:0 1px 2px rgba(0,0,0,.3);--shadow-nav:0 -1px 0 rgba(255,255,255,.05);
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --cream:#1C1B19;--paper:#252421;--sand:#34312D;--hairline:#36332E;
+  --ink:#EEEAE3;--ink-muted:#A9A69F;--sage:#7F857B;--sage-deep:#B4BBAE;
+  --clay:#D48A6E;--clay-deep:#D48A6E;--clay-soft:#3A2B24;--on-clay:#1C1B19;
+  --scrim:rgba(0,0,0,.55);--shadow-card:0 1px 2px rgba(0,0,0,.3);--shadow-nav:0 -1px 0 rgba(255,255,255,.05);
+  color-scheme:dark}
+
+*{box-sizing:border-box}
+html,body{background:var(--cream)}
+body{color:var(--ink);font:400 15px/22px var(--font-cjk);-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--cream)}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;background:none;border:0;padding:0}
+:focus-visible{outline:2px solid var(--clay-deep);outline-offset:2px;border-radius:6px}
+.app{max-width:480px;margin:0 auto;padding-bottom:calc(var(--nav-h) + 32px + env(safe-area-inset-bottom,0px))}
+.num{font-family:var(--font-sans);font-variant-numeric:tabular-nums}
+.ov{font:700 11px/14px var(--font-sans);letter-spacing:.16em;text-transform:uppercase;color:var(--ink-muted)}
+.cap{font-size:13px;line-height:18px;font-weight:500;color:var(--ink-muted)}
+.h2{font-size:17px;line-height:24px;font-weight:600;margin:0}
+.title{font-size:26px;line-height:32px;font-weight:600;margin:0;text-wrap:balance}
+.unit{font:500 13px var(--font-sans);color:var(--ink-muted);margin-left:3px}
+.muted{color:var(--ink-muted)}
+.pos{color:var(--sage-deep)}
+
+/* header */
+.top{display:flex;align-items:center;justify-content:space-between;padding-top:20px;padding-bottom:6px}
+.brand .wm{font:700 18px/20px var(--font-sans);letter-spacing:.24em}
+.brand .tg{font:500 12px/16px var(--font-sans);color:var(--ink-muted);letter-spacing:.02em;margin-top:2px}
+.avatar{width:40px;height:40px;border-radius:50%;background:var(--sand);display:grid;place-items:center;font-weight:600;font-size:15px}
+.dateline{display:flex;justify-content:space-between;align-items:baseline;margin:22px 0 12px;gap:12px;flex-wrap:wrap}
+
+/* screens */
+.screen{display:flex;flex-direction:column;gap:16px;animation:rise var(--dur-base) ease both}
+@keyframes rise{from{opacity:.001;transform:translateY(8px)}}
+.sec{display:flex;flex-direction:column;gap:12px;margin-top:12px}
+.sec-h{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+.card{background:var(--paper);border:1px solid var(--hairline);border-radius:var(--r-md);padding:20px}
+.hero{border-radius:var(--r-lg);box-shadow:var(--shadow-card);border-color:transparent;padding:24px 22px}
+.screen-h{padding-top:24px;display:flex;justify-content:space-between;align-items:flex-end;gap:12px}
+
+/* hero */
+.wrow{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;margin-top:10px}
+.wbig{font:300 64px/1 var(--font-sans);letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+.wbig .unit{font-size:15px;letter-spacing:0;margin-left:6px}
+.chart.spark{width:112px;height:44px;flex:none}
+.rings{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:22px;padding-top:20px;border-top:1px solid var(--hairline)}
+.ring{display:flex;flex-direction:column;align-items:center;gap:8px}
+.ring .rw{position:relative;width:128px;height:128px;max-width:100%}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring .track{fill:none;stroke:var(--sand);stroke-width:8}
+.ring .arc{fill:none;stroke:var(--clay);stroke-width:8;stroke-linecap:round;transition:stroke-dashoffset 700ms cubic-bezier(.2,.7,.2,1)}
+.ring .arc.p{stroke:var(--sage-deep)}
+.ring .mid{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.ring .v{font:300 30px/34px var(--font-sans);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.verdict{margin-top:18px;font-size:15px;line-height:23px}
+.verdict b{font-weight:600}
+
+/* list rows */
+.list{padding:2px 18px}
+.row{display:flex;align-items:center;gap:14px;padding:15px 0;border-bottom:1px solid var(--hairline);width:100%;text-align:left}
+.row:last-child{border-bottom:0}
+.row .t{flex:1;min-width:0}
+.row .t>div:first-child{font-size:15px;line-height:22px}
+.mark{width:26px;height:26px;border-radius:50%;border:1.5px solid var(--sage);display:grid;place-items:center;flex:none}
+.mark svg{width:14px;height:14px;stroke:var(--paper);stroke-width:2.4;fill:none;opacity:0}
+.mark.done{background:var(--sage-deep);border-color:var(--sage-deep)}
+.mark.done svg{opacity:1}
+.mark.part{border-color:var(--clay);background:conic-gradient(var(--clay-soft) var(--pct,0%),transparent 0)}
+.chev{width:18px;height:18px;stroke:var(--sage);fill:none;stroke-width:1.8;flex:none}
+.mini-btn{font:600 13px var(--font-sans);color:var(--clay-deep);padding:8px 12px;border-radius:var(--pill);background:var(--clay-soft);flex:none}
+.pbar{height:6px;border-radius:var(--pill);background:var(--sand);overflow:hidden}
+.pbar i{display:block;height:100%;border-radius:inherit;background:var(--clay);transition:width 700ms cubic-bezier(.2,.7,.2,1)}
+.pbar.p i{background:var(--sage-deep)}
+
+/* buttons */
+.btn{font:600 15px/1 var(--font-cjk);border-radius:var(--pill);padding:15px 22px;background:var(--clay-deep);color:var(--on-clay);transition:transform var(--dur-fast),opacity var(--dur-fast);text-align:center}
+.btn:active{transform:scale(.98)}
+.btn.block{width:100%}
+.btn.quiet{background:var(--sand);color:var(--ink)}
+.btn.ghost{background:transparent;color:var(--clay-deep);padding:10px 4px}
+.btn[disabled]{opacity:.45;pointer-events:none}
+.btns{display:flex;gap:10px}
+.btns .btn{flex:1}
+.link{font:600 14px var(--font-cjk);color:var(--clay-deep);padding:6px 0}
+
+/* segmented & chips */
+.seg{display:flex;background:var(--sand);border-radius:var(--pill);padding:4px;gap:2px}
+.seg button{flex:1;white-space:nowrap;padding:9px 6px;border-radius:var(--pill);font-size:14px;font-weight:600;color:var(--ink-muted);transition:background var(--dur-fast)}
+.seg button.on{background:var(--paper);color:var(--ink);box-shadow:0 1px 2px rgba(48,49,47,.08)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font:600 14px/1 var(--font-cjk);padding:11px 14px;border-radius:var(--pill);background:var(--sand);color:var(--ink);transition:transform var(--dur-fast)}
+.chip:active{transform:scale(.97)}
+.chip.on{background:var(--clay-soft);color:var(--clay-deep);box-shadow:inset 0 0 0 1.5px var(--clay-deep)}
+.chip .num{font-weight:600}
+
+/* stats grid */
+.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--hairline);border-radius:var(--r-md);overflow:hidden;border:1px solid var(--hairline)}
+.stat{background:var(--paper);padding:16px 16px 14px;min-width:0}
+.stat .v{font:300 28px/32px var(--font-sans);letter-spacing:-.02em;margin-top:6px;font-variant-numeric:tabular-nums}
+.stat .d{margin-top:4px}
+
+/* charts */
+.chart{width:100%;height:auto;display:block}
+.chart .ln{fill:none;stroke:var(--clay);stroke-width:1.6;stroke-linejoin:round;stroke-linecap:round}
+.chart .ar{fill:var(--clay);opacity:.08}
+.chart .goal{stroke:var(--sage);stroke-dasharray:3 4;stroke-width:1}
+.chart .grid{stroke:var(--hairline);stroke-width:1}
+.chart .dot{fill:var(--clay);stroke:var(--paper);stroke-width:2.5}
+.chart .pt{fill:var(--paper);stroke:var(--clay);stroke-width:1.4}
+.chart text{fill:var(--ink-muted);font:500 11px var(--font-sans)}
+.chart .bar{fill:var(--sand)}
+.chart .bar.on{fill:var(--clay)}
+
+/* journey */
+.jbar{height:6px;border-radius:var(--pill);background:var(--sand);overflow:hidden;margin:14px 0}
+.jbar i{display:block;height:100%;background:var(--clay);border-radius:inherit}
+.ms{display:flex;justify-content:space-between;gap:4px}
+.ms .m{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:12px;line-height:15px;color:var(--ink-muted);text-align:center;flex:1}
+.ms .m b{width:10px;height:10px;border-radius:50%;border:1.5px solid var(--sage)}
+.ms .m.on b{background:var(--sage-deep);border-color:var(--sage-deep)}
+.ms .m.cur b{background:var(--clay);border-color:var(--clay);box-shadow:0 0 0 4px var(--clay-soft)}
+.ms .m.cur{color:var(--ink);font-weight:600}
+.days{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:6px}
+.days .d{aspect-ratio:1;border-radius:8px;background:var(--sand);display:grid;place-items:center;font:600 11px var(--font-sans);color:var(--ink-muted);max-width:100%}
+.days .d.l1{background:var(--clay-soft);color:var(--clay-deep)}
+.days .d.l2{background:color-mix(in srgb,var(--clay) 55%,var(--paper));color:var(--ink)}
+.days .d.l3{background:var(--clay);color:var(--on-clay)}
+.days .d.today{box-shadow:inset 0 0 0 1.5px var(--ink)}
+.days .d.future{background:transparent;box-shadow:inset 0 0 0 1px var(--hairline);color:var(--sage)}
+.legend{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.legend span{display:flex;align-items:center;gap:6px}
+.legend i{width:12px;height:12px;border-radius:4px;display:inline-block}
+.trio{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;text-align:left}
+.trio .v{font:300 28px/32px var(--font-sans);letter-spacing:-.02em;font-variant-numeric:tabular-nums;margin-top:4px}
+
+/* leaderboard */
+.lb .r{display:flex;align-items:center;gap:12px;padding:13px 6px;border-bottom:1px solid var(--hairline)}
+.lb .r:last-child{border-bottom:0}
+.lb .rk{width:18px;font:600 14px var(--font-sans);color:var(--ink-muted);text-align:center;flex:none}
+.lb .av{width:36px;height:36px;border-radius:50%;background:var(--sand);display:grid;place-items:center;font-size:14px;font-weight:600;flex:none}
+.lb .t{flex:1;min-width:0}
+.lb .pts{font:500 20px var(--font-sans);font-variant-numeric:tabular-nums}
+.lb .me{background:var(--clay-soft);border-radius:var(--r-sm);border-bottom-color:transparent}
+.tag{display:inline-flex;align-items:center;font:600 11px/1 var(--font-sans);letter-spacing:.08em;padding:5px 8px;border-radius:var(--pill);background:var(--sand);color:var(--ink-muted)}
+.tag.clay{background:var(--clay-soft);color:var(--clay-deep)}
+.rules{display:grid;gap:10px;margin-top:4px}
+.rules div{display:flex;justify-content:space-between;gap:12px;font-size:14px}
+
+/* meals */
+.meal .mh{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.meal .it{display:flex;justify-content:space-between;gap:12px;padding:12px 0;border-top:1px solid var(--hairline);align-items:center}
+.meal .it:first-of-type{margin-top:10px}
+.meal .it .nm{min-width:0;flex:1}
+.x{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;flex:none}
+.x svg{width:14px;height:14px;stroke:var(--sage);stroke-width:2;fill:none}
+.macro{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:18px}
+.macro .lab{display:flex;flex-direction:column;margin-bottom:8px;gap:2px}
+
+/* empty */
+.empty{display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;padding:30px 20px}
+.empty svg{width:56px;height:56px;fill:none;stroke:var(--sage);stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round;margin-bottom:10px}
+.empty .btn{margin-top:14px}
+
+/* skeleton */
+.sk{background:var(--sand);border-radius:8px;animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.5}}
+
+/* banner */
+.banner{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--clay-soft);border-radius:var(--r-sm);padding:10px 12px 10px 14px;margin-top:14px}
+.banner .cap{color:var(--ink)}
+
+/* nav */
+.nav{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--paper);box-shadow:var(--shadow-nav);
+  padding:8px max(8px,env(safe-area-inset-right,0px)) calc(10px + env(safe-area-inset-bottom,0px)) max(8px,env(safe-area-inset-left,0px))}
+.nav .in{max-width:480px;margin:0 auto;display:flex}
+.nav button{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:11px;line-height:14px;font-weight:600;color:var(--ink-muted);padding:4px 0}
+.nav svg{width:24px;height:24px;fill:none;stroke:var(--sage);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;transition:stroke var(--dur-fast)}
+.nav button.on{color:var(--clay-deep)}
+.nav button.on svg{stroke:var(--ink)}
+
+/* sheet */
+.scrim{position:fixed;inset:0;background:var(--scrim);z-index:40;opacity:0;transition:opacity var(--dur-base)}
+.scrim.show{opacity:1}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:41;max-width:480px;margin:0 auto;background:var(--paper);border-radius:var(--r-lg) var(--r-lg) 0 0;box-shadow:var(--shadow-card);
+  max-height:88vh;max-height:88dvh;overflow:auto;overscroll-behavior:contain;transform:translateY(102%);transition:transform var(--dur-base) cubic-bezier(.2,.8,.2,1);
+  padding:10px max(20px,env(safe-area-inset-right,0px)) calc(24px + env(safe-area-inset-bottom,0px)) max(20px,env(safe-area-inset-left,0px))}
+.sheet.show{transform:none}
+.grab{display:block;width:36px;height:4px;border-radius:2px;background:var(--sand);margin:0 auto 16px}
+.sh-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;gap:12px}
+.form{display:flex;flex-direction:column;gap:14px}
+.f{display:flex;flex-direction:column;gap:6px;min-width:0}
+.f label{font-size:13px;font-weight:600;color:var(--ink-muted)}
+.f input,.f select,.f textarea{width:100%;background:var(--cream);border:1px solid var(--hairline);border-radius:var(--r-sm);padding:12px 14px;font-size:16px;font-family:var(--font-sans);outline:none;min-width:0}
+.f input:focus,.f select:focus,.f textarea:focus{border-color:var(--clay-deep);box-shadow:0 0 0 3px var(--clay-soft)}
+.f .in-u{position:relative}
+.f .in-u span{position:absolute;right:14px;top:50%;transform:translateY(-50%);font:500 13px var(--font-sans);color:var(--ink-muted);pointer-events:none}
+.f .in-u input{padding-right:52px}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.hint{font-size:13px;line-height:19px;color:var(--ink-muted)}
+.srch{display:flex;flex-direction:column;max-height:260px;overflow:auto;border:1px solid var(--hairline);border-radius:var(--r-sm)}
+.srch button{display:flex;justify-content:space-between;gap:12px;padding:12px 14px;border-bottom:1px solid var(--hairline);text-align:left}
+.srch button:last-child{border-bottom:0}
+.srch button.on{background:var(--clay-soft)}
+.scale{display:flex;gap:6px}
+.scale button{flex:1;padding:12px 0;border-radius:var(--r-sm);background:var(--sand);font:600 15px var(--font-sans)}
+.scale button.on{background:var(--clay-deep);color:var(--on-clay)}
+.toggle{display:flex;justify-content:space-between;align-items:center;padding:4px 0}
+.sw{width:48px;height:28px;border-radius:var(--pill);background:var(--sand);position:relative;transition:background var(--dur-fast);flex:none}
+.sw::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:var(--paper);box-shadow:0 1px 2px rgba(0,0,0,.15);transition:transform var(--dur-fast)}
+.sw.on{background:var(--clay-deep)}
+.sw.on::after{transform:translateX(20px)}
+.toast{position:fixed;left:50%;bottom:calc(var(--nav-h) + 28px + env(safe-area-inset-bottom,0px));transform:translate(-50%,12px);background:var(--ink);color:var(--cream);font-size:14px;font-weight:500;padding:11px 18px;border-radius:var(--pill);opacity:0;transition:all var(--dur-base);z-index:60;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+/* onboarding */
+.ob{min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;max-width:480px;margin:0 auto;padding-top:28px;padding-bottom:28px}
+.ob .steps{display:flex;gap:6px;margin-bottom:28px}
+.ob .steps i{flex:1;height:3px;border-radius:2px;background:var(--sand)}
+.ob .steps i.on{background:var(--clay)}
+.ob .body{flex:1;display:flex;flex-direction:column;gap:18px}
+.ob .foot{display:flex;gap:10px;margin-top:24px}
+.ob .foot .btn{flex:1}
+.welcome{flex:1;display:flex;flex-direction:column;justify-content:space-between;padding-top:12vh}
+.welcome .wm{font:300 76px/.92 var(--font-sans);letter-spacing:-.045em}
+.welcome .zh{font:500 15px var(--font-cjk);letter-spacing:.24em;color:var(--ink-muted);margin:14px 0 0 4px}
+.welcome .lead{font-size:17px;line-height:27px;margin-top:40px;max-width:24em}
+.welcome .arcs{width:100%;max-width:340px;height:auto;margin-top:36px}
+.plan-sum{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--hairline);border-radius:var(--r-md);overflow:hidden;border:1px solid var(--hairline)}
+.plan-sum div{background:var(--paper);padding:16px 12px}
+.plan-sum .v{font:300 26px/30px var(--font-sans);margin-top:4px;font-variant-numeric:tabular-nums}
+
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+@media (max-width:360px){.wbig{font-size:54px}.ring .rw{width:110px;height:110px}.ring .v{font-size:26px}}
+</style>
+
+<style>:root{padding-top:env(safe-area-inset-top,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<div id="app" class="app" aria-live="polite"></div>
+<nav class="nav" id="nav" hidden><div class="in" id="navin"></div></nav>
+<div class="scrim" id="scrim" hidden></div>
+<div class="sheet" id="sheet" role="dialog" aria-modal="true" hidden></div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+(function(){
+"use strict";
+/* ---------- utils ---------- */
+const KEY="howso:v1";
+const pad=n=>String(n).padStart(2,"0");
+const ds=d=>d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
+const today=()=>ds(new Date());
+const parse=s=>{const [y,m,d]=s.split("-").map(Number);return new Date(y,m-1,d)};
+const addDays=(s,n)=>{const d=parse(s);d.setDate(d.getDate()+n);return ds(d)};
+const diffDays=(a,b)=>Math.round((parse(b)-parse(a))/864e5);
+const WD=["日","一","二","三","四","五","六"];
+const fmtDate=s=>{const d=parse(s);return (d.getMonth()+1)+"月"+d.getDate()+"日 星期"+WD[d.getDay()]};
+const md=s=>{const d=parse(s);return (d.getMonth()+1)+"/"+d.getDate()};
+const r1=n=>Math.round(n*10)/10;
+const nf=(n,d=0)=>n==null||isNaN(n)?"—":Number(n).toLocaleString("en-US",{minimumFractionDigits:d,maximumFractionDigits:d});
+const sgn=(n,d=1)=>n==null||isNaN(n)?"—":(n>0?"+":n<0?"−":"±")+nf(Math.abs(n),d);
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const uid=()=>Math.random().toString(36).slice(2,9);
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const r50=n=>Math.round(n/50)*50, r5=n=>Math.round(n/5)*5;
+const $=s=>document.querySelector(s);
+
+/* ---------- icons ---------- */
+const I={
+ today:'<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
+ food:'<path d="M6 3v7a3 3 0 0 0 6 0V3M9 3v18M17.5 3C15.5 5 15.5 9.5 17.5 11.5V21"/>',
+ move:'<path d="M3.5 13h4l2.2-6 4.4 11 2.2-5h4.2"/>',
+ body:'<circle cx="12" cy="6.5" r="3"/><path d="M5.5 21c0-4.4 2.9-8 6.5-8s6.5 3.6 6.5 8"/>',
+ journey:'<path d="M3.5 18.5 9.5 9l4 5.5 2.5-3 4.5 7z"/><circle cx="17" cy="5.5" r="1.5"/>',
+ chev:'<path d="m9 5 7 7-7 7"/>',
+ left:'<path d="m15 5-7 7 7 7"/>',
+ check:'<path d="m5 12.5 4.5 4.5L19 7.5"/>',
+ close:'<path d="M6 6l12 12M18 6 6 18"/>',
+ plus:'<path d="M12 5v14M5 12h14"/>'
+};
+const ic=(n,c="")=>`<svg viewBox="0 0 24 24" class="${c}" aria-hidden="true">${I[n]}</svg>`;
+const ART={
+ meal:'<svg viewBox="0 0 64 64"><circle cx="34" cy="34" r="19"/><circle cx="34" cy="34" r="11"/><path d="M10 12v11a3 3 0 0 0 6 0V12M13 12v40"/></svg>',
+ move:'<svg viewBox="0 0 64 64"><path d="M6 38h12l6-18 12 30 6-14h16"/></svg>',
+ body:'<svg viewBox="0 0 64 64"><path d="M8 50 22 28l10 12 8-10 16 20z"/><path d="M8 54h48"/></svg>',
+ tape:'<svg viewBox="0 0 64 64"><circle cx="24" cy="30" r="16"/><circle cx="24" cy="30" r="5"/><path d="M24 46h32v-8M34 46v-5M42 46v-5M50 46v-5"/></svg>',
+ team:'<svg viewBox="0 0 64 64"><circle cx="22" cy="24" r="7"/><circle cx="42" cy="24" r="7"/><path d="M8 50c0-8 6-14 14-14s14 6 14 14M30 40c2-3 6-4 12-4 8 0 14 6 14 14"/></svg>',
+ heart:'<svg viewBox="0 0 64 64"><path d="M32 52S10 39 10 24a11 11 0 0 1 22-3 11 11 0 0 1 22 3c0 15-22 28-22 28z"/><path d="M18 30h8l3-6 5 11 3-5h9"/></svg>'
+};
+
+/* ---------- data ---------- */
+const FOODS=[
+ ["無糖豆漿","400 ml",140,14,8,6],["茶葉蛋","1 顆",75,7,1,5],["水煮蛋","1 顆",75,7,1,5],["地瓜","1 條 200 g",170,3,40,0],
+ ["雞胸肉","100 g",165,31,0,4],["超商舒肥雞胸","1 包",120,25,1,2],["糙米飯","半碗",140,3,30,1],["白飯","1 碗",280,5,62,0],
+ ["燙青菜","1 份",60,2,6,3],["鮭魚","100 g",200,22,0,12],["板豆腐","半盒 150 g",120,12,3,7],["希臘優格","150 g",130,15,6,4],
+ ["香蕉","1 根",105,1,27,0],["蘋果","1 顆",95,0,25,0],["芭樂","1 顆",110,2,24,1],["毛豆","100 g",125,11,9,5],
+ ["鮪魚飯糰","1 個",210,7,38,3],["雞腿便當","1 個",750,35,90,25],["牛肉麵","1 碗",650,30,80,20],["燕麥片","40 g",150,5,27,3],
+ ["無糖拿鐵","中杯",180,9,14,9],["蛋餅","1 份",290,9,30,15],["雞肉沙拉","1 盒",280,22,14,14],["滷味(蔬菜豆干)","1 份",260,16,20,12],
+ ["堅果","1 小把 25 g",160,5,5,14],["乳清蛋白","1 匙",120,24,3,1],["牛奶","240 ml",150,8,12,8],["火鍋(清湯)","1 人份",600,40,40,25]
+];
+const ACTS=[["快走",4.3],["散步",3],["慢跑",8],["力量訓練",5],["瑜伽",3],["皮拉提斯",3.5],["飛輪",7],["游泳",6],["間歇訓練",8],["跳舞",5],["爬樓梯",8]];
+const WEEK=[
+ {type:"快走",min:30,desc:"保持能說話但略喘的速度，飯後 30 分鐘內開始最好。"},
+ {type:"力量訓練",min:30,label:"力量訓練 A",desc:"深蹲、臀橋、跪姿伏地挺身、划船，各 3 組 12 下。"},
+ {type:"瑜伽",min:20,label:"伸展與核心",desc:"髖部伸展、貓牛式、平板支撐 3 次各 30 秒。"},
+ {type:"力量訓練",min:30,label:"力量訓練 B",desc:"弓箭步、羅馬尼亞硬舉、肩推、死蟲，各 3 組 12 下。"},
+ {type:"快走",min:40,desc:"今天多走 10 分鐘，可分早晚兩段完成。"},
+ {type:"間歇訓練",min:20,desc:"1 分鐘快、1 分鐘慢，重複 8 輪，前後各暖身緩和 2 分鐘。"},
+ {type:"散步",min:30,label:"輕鬆恢復",desc:"恢復日，輕鬆散步或伸展，讓肌肉修復。"}
+];
+const PHASES=[
+ {from:1,to:7,name:"啟動期",en:"RESET",def:300,steps:6000,desc:"建立每天紀錄的節奏，熱量只小幅減少，讓身體適應。"},
+ {from:8,to:21,name:"燃脂期",en:"BURN",def:500,steps:8000,desc:"熱量缺口拉到 500 kcal，每週 2 次力量訓練保住肌肉。"},
+ {from:22,to:30,name:"穩定期",en:"SETTLE",def:450,steps:9000,desc:"維持習慣、穩定體重，第 30 天做 InBody 複測。"}
+];
+const MILES=[[1,"啟動"],[7,"適應"],[14,"燃脂"],[21,"穩定"],[30,"複測"]];
+const IB=[
+ ["weight","體重","kg",1],["smm","骨骼肌重","kg",1],["bfm","體脂肪重","kg",1],["pbf","體脂率","%",1],["bmi","BMI","",1],
+ ["bmr","基礎代謝","kcal",0],["vfl","內臟脂肪等級","",0],["tbw","身體總水分","L",1],["protein","蛋白質","kg",1],["mineral","礦物質","kg",2],["score","InBody 分數","分",0]
+];
+const MS=[["waist","腰圍"],["hip","臀圍"],["chest","胸圍"],["arm","上臂圍"],["thigh","大腿圍"],["calf","小腿圍"]];
+const ACT_LV=[[1.2,"久坐","辦公室為主，幾乎不運動"],[1.375,"輕度","每週運動 1–3 天"],[1.55,"中度","每週運動 3–5 天"],[1.725,"高度","每天運動或勞動工作"]];
+
+function blank(){return {v:1,sample:false,profile:null,adj:{kcal:0,protein:0,steps:0},adjLog:[],adjSkip:{},inbody:[],measures:[],weights:[],meals:[],acts:[],steps:{},water:{},health:{},foods:[],prefs:{theme:"system"}}}
+let S;
+function load(){try{const raw=localStorage.getItem(KEY);if(raw){const o=JSON.parse(raw);return Object.assign(blank(),o)}}catch(e){}return null}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+
+/* ---------- derived ---------- */
+const sortD=a=>a.slice().sort((x,y)=>x.date<y.date?-1:x.date>y.date?1:0);
+const firstOf=a=>sortD(a)[0]||null, lastOf=a=>{const s=sortD(a);return s[s.length-1]||null};
+function weightSeries(){
+  const m={};S.inbody.forEach(r=>{if(r.weight)m[r.date]=r.weight});S.weights.forEach(r=>{m[r.date]=r.kg});
+  return Object.keys(m).sort().map(d=>({date:d,v:m[d]}));
+}
+const curW=()=>{const s=weightSeries();return s.length?s[s.length-1].v:null};
+const startW=()=>{const s=weightSeries().filter(p=>!S.profile||p.date>=S.profile.startDate);const all=weightSeries();return (s[0]||all[0]||{}).v??null};
+function pbfNow(){const l=lastOf(S.inbody);return l&&l.pbf?l.pbf:null}
+function lbm(){const w=curW(),p=pbfNow();if(!w)return null;return p?w*(1-p/100):w*0.7}
+function bmr(){
+  const l=lastOf(S.inbody);if(l&&l.bmr)return l.bmr;
+  const L=lbm();if(L)return 370+21.6*L;
+  const P=S.profile||{};const w=curW()||60;return 10*w+6.25*(P.height||160)-5*(P.age||35)-161;
+}
+const planDay=(d=today())=>S.profile?diffDays(S.profile.startDate,d)+1:1;
+const phaseOf=day=>PHASES.find(p=>day>=p.from&&day<=p.to)||(day<1?PHASES[0]:PHASES[2]);
+function targets(d=today()){
+  const day=planDay(d),ph=phaseOf(day),B=bmr(),act=(S.profile&&S.profile.activity)||1.375;
+  const tdee=B*act;
+  let kcal=r50(tdee-ph.def)+S.adj.kcal;
+  kcal=Math.max(kcal,r50(B),1200);
+  const L=lbm()||42;
+  const protein=clamp(r5(2*L),70,150)+S.adj.protein;
+  const water=r50((curW()||60)*35);
+  const steps=ph.steps+S.adj.steps;
+  return {kcal,protein,water,steps,tdee:Math.round(tdee),bmr:Math.round(B),phase:ph,day};
+}
+function dayData(d){
+  const meals=S.meals.filter(m=>m.date===d),acts=S.acts.filter(a=>a.date===d);
+  const sum=k=>meals.reduce((s,m)=>s+(+m[k]||0),0);
+  return {meals,acts,kcal:sum("kcal"),p:sum("p"),c:sum("c"),f:sum("f"),actMin:acts.reduce((s,a)=>s+(+a.min||0),0),actKcal:acts.reduce((s,a)=>s+(+a.kcal||0),0),
+    water:S.water[d]||0,health:S.health[d]||null,steps:S.steps[d]||0,weighed:S.weights.some(w=>w.date===d)||S.inbody.some(w=>w.date===d)};
+}
+function dayLevel(d){const t=targets(d),x=dayData(d);let n=0;if(x.meals.length>=2)n++;if(x.actMin>=15||x.steps>=t.steps*0.8)n++;if(x.water>=t.water*0.9)n++;return n}
+function anyLog(d){const x=dayData(d);return x.meals.length||x.acts.length||x.water||x.health||x.weighed||x.steps}
+function streak(){let d=today(),n=0;if(!anyLog(d))d=addDays(d,-1);while(anyLog(d)&&n<999){n++;d=addDays(d,-1)}return n}
+const plannedWorkout=day=>WEEK[((day-1)%7+7)%7];
+function weightRate(){
+  const s=weightSeries().filter(p=>diffDays(p.date,today())<=14);
+  if(s.length<4||diffDays(s[0].date,s[s.length-1].date)<7)return null;
+  const xs=s.map(p=>diffDays(s[0].date,p.date)),ys=s.map(p=>p.v),n=s.length;
+  const mx=xs.reduce((a,b)=>a+b)/n,my=ys.reduce((a,b)=>a+b)/n;
+  let num=0,den=0;xs.forEach((x,i)=>{num+=(x-mx)*(ys[i]-my);den+=(x-mx)**2});
+  return den?-(num/den)*7:null; // kg lost per week (positive = losing)
+}
+function weekKey(){return S.profile?"w"+Math.floor((planDay()-1)/7):"w0"}
+function suggestion(){
+  if(!S.profile||planDay()<8)return null;
+  if(S.adjSkip[weekKey()])return null;
+  const t=targets(),rate=weightRate();
+  const f=firstOf(S.inbody),l=lastOf(S.inbody);
+  if(f&&l&&f!==l&&f.smm&&l.smm&&l.smm-f.smm<=-0.3)
+    return {k:"muscle",title:"骨骼肌下降了 "+nf(f.smm-l.smm,1)+" kg",body:"減脂時要保住肌肉。建議蛋白質提高 10 g，並維持每週 2 次力量訓練。",change:{protein:10},cta:"蛋白質 +10 g"};
+  if(rate==null)return null;
+  if(rate<0.2){
+    if(t.kcal-100>=Math.max(t.bmr,1200))return {k:"slow",title:"近兩週每週約 "+(rate<0?"增加 "+nf(-rate,2):"減少 "+nf(rate,2))+" kg",body:"進度比預期慢。建議每日熱量減少 100 kcal，改為 "+nf(t.kcal-100)+" kcal。",change:{kcal:-100},cta:"熱量 −100 kcal"};
+    return {k:"slow-steps",title:"近兩週每週約減少 "+nf(Math.max(rate,0),2)+" kg",body:"熱量已接近基礎代謝，不建議再少吃。改為每天多走 2,000 步。",change:{steps:2000},cta:"步數 +2,000"};
+  }
+  if(rate>1.0)return {k:"fast",title:"近兩週每週約減少 "+nf(rate,2)+" kg",body:"速度偏快，容易流失肌肉。建議每日熱量增加 150 kcal。",change:{kcal:150},cta:"熱量 +150 kcal"};
+  return null;
+}
+function firstLastMeasure(k){const a=sortD(S.measures.filter(m=>m[k]));return [a[0]||null,a[a.length-1]||null]}
+function myScore(){
+  if(!S.profile)return {total:0,w:0,f:0,ws:0,log:0,wPct:0,pbfD:0,waistD:0};
+  const sw=startW(),cw=curW();const wPct=sw&&cw?(sw-cw)/sw*100:0;
+  const fi=firstOf(S.inbody),li=lastOf(S.inbody);const pbfD=fi&&li&&fi.pbf&&li.pbf?fi.pbf-li.pbf:0;
+  const [fm,lm]=firstLastMeasure("waist");const waistD=fm&&lm?fm.waist-lm.waist:0;
+  let log=0;const n=Math.min(planDay(),30);for(let i=0;i<n;i++)log+=dayLevel(addDays(S.profile.startDate,i));
+  const w=Math.max(0,wPct*10),f=Math.max(0,pbfD*10),ws=Math.max(0,waistD*5);
+  return {total:Math.round(w+f+ws+log),w:Math.round(w),f:Math.round(f),ws:Math.round(ws),log,wPct,pbfD,waistD};
+}
+
+/* ---------- charts ---------- */
+function lineChart(pts,{w=320,h=150,goal=null,unit="",dec=1}={}){
+  if(!pts.length)return "";
+  const padL=6,padR=40,padT=14,padB=22;
+  const vals=pts.map(p=>p.v).concat(goal!=null?[goal]:[]);
+  let lo=Math.min(...vals),hi=Math.max(...vals);const span=Math.max(hi-lo,1);lo-=span*.15;hi+=span*.15;
+  const d0=pts[0].date,dn=pts[pts.length-1].date,days=Math.max(diffDays(d0,dn),1);
+  const X=d=>padL+(diffDays(d0,d)/days)*(w-padL-padR),Y=v=>padT+(1-(v-lo)/(hi-lo))*(h-padT-padB);
+  const path=pts.map(p=>X(p.date).toFixed(1)+","+Y(p.v).toFixed(1)).join(" ");
+  const last=pts[pts.length-1];
+  let g="";
+  if(goal!=null){const gy=Y(goal);g=`<line x1="${padL}" x2="${w-padR}" y1="${gy}" y2="${gy}" class="goal"/><text x="${w-padR+6}" y="${gy+4}">目標</text>`}
+  const area=pts.length>1?`<polygon class="ar" points="${X(d0)},${h-padB} ${path} ${X(dn)},${h-padB}"/>`:"";
+  const dots=pts.length<=16?pts.slice(0,-1).map(p=>`<circle class="pt" cx="${X(p.date)}" cy="${Y(p.v)}" r="2.2"/>`).join(""):"";
+  return `<svg class="chart" viewBox="0 0 ${w} ${h}" role="img" aria-label="趨勢圖，最新 ${nf(last.v,dec)} ${unit}">
+   <line x1="${padL}" x2="${w-padR}" y1="${h-padB}" y2="${h-padB}" class="grid"/>${g}${area}
+   <polyline class="ln" points="${path}"/>${dots}<circle class="dot" cx="${X(dn)}" cy="${Y(last.v)}" r="4.5"/>
+   <text x="${Math.min(X(dn)+8,w-padR+6)}" y="${Y(last.v)+4}" style="fill:var(--ink);font-weight:600">${nf(last.v,dec)}</text>
+   <text x="${padL}" y="${h-6}">${md(d0)}</text><text x="${w-padR}" y="${h-6}" text-anchor="end">${md(dn)}</text></svg>`;
+}
+function spark(pts){
+  if(pts.length<2)return "";
+  const w=112,h=44,vs=pts.map(p=>p.v);let lo=Math.min(...vs),hi=Math.max(...vs);if(hi-lo<.4){hi+=.2;lo-=.2}
+  const X=i=>4+i/(pts.length-1)*(w-10),Y=v=>5+(1-(v-lo)/(hi-lo))*(h-10);
+  return `<svg class="chart spark" viewBox="0 0 ${w} ${h}" aria-hidden="true"><polyline class="ln" points="${pts.map((p,i)=>X(i)+","+Y(p.v)).join(" ")}"/><circle class="dot" cx="${X(pts.length-1)}" cy="${Y(vs[vs.length-1])}" r="3.5"/></svg>`;
+}
+function ring(val,target,label,cls=""){
+  const C=2*Math.PI*52,pct=target?clamp(val/target,0,1):0;
+  return `<div class="ring"><div class="rw"><svg viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="52" class="track"/><circle cx="60" cy="60" r="52" class="arc ${cls}" stroke-dasharray="${C.toFixed(1)}" stroke-dashoffset="${C.toFixed(1)}" data-off="${(C*(1-pct)).toFixed(1)}"/></svg>
+  <div class="mid"><div class="v">${nf(val)}</div><div class="cap num">/ ${nf(target)}${label.u}</div></div></div><div class="cap">${label.t}</div></div>`;
+}
+function weekBars(){
+  const t=today();const w=300,h=110,bw=26;let out="";
+  for(let i=6;i>=0;i--){const d=addDays(t,-i),x=dayData(d),idx=6-i;const max=60;const bh=Math.max(3,clamp(x.actMin/max,0,1)*(h-34));
+    const cx=14+idx*((w-28)/6);
+    out+=`<rect class="bar ${x.actMin>=20?"on":""}" x="${cx-bw/2}" y="${h-20-bh}" width="${bw}" height="${bh}" rx="6"/><text x="${cx}" y="${h-4}" text-anchor="middle">${i===0?"今天":WD[parse(d).getDay()]}</text>${x.actMin?`<text x="${cx}" y="${h-26-bh}" text-anchor="middle">${x.actMin}</text>`:""}`;
+  }
+  return `<svg class="chart" viewBox="0 0 ${w} ${h}" role="img" aria-label="近 7 天活動分鐘">${out}</svg>`;
+}
+
+/* ---------- state ---------- */
+let tab="today",foodDate=today(),bodySeg="weight",range=30,jSeg="me",booted=false;
+const app=$("#app");
+
+/* ---------- screens ---------- */
+function header(){
+  const n=S.profile&&S.profile.name?S.profile.name.slice(0,1):"我";
+  return `<div class="top"><div class="brand"><div class="wm">HOWSO</div><div class="tg">Your Wellness Journal</div></div>
+  <button class="avatar" data-act="settings" aria-label="個人設定">${esc(n)}</button></div>
+  ${S.sample?`<div class="banner"><span class="cap">目前顯示範例資料，看完可換成你自己的。</span><button class="mini-btn" data-act="startReal">開始設定</button></div>`:""}`;
+}
+function screenToday(){
+  const t=targets(),x=dayData(today()),day=t.day;
+  const cw=curW(),sw=startW(),gw=S.profile.goalWeight;
+  const ser=weightSeries().slice(-14);
+  const left=t.kcal-x.kcal,pLeft=t.protein-x.p;
+  let verdict;
+  if(!x.meals.length)verdict=`今天還沒記錄飲食。目標 <b class="num">${nf(t.kcal)} kcal</b>、蛋白質 <b class="num">${t.protein} g</b>。`;
+  else if(left>=0)verdict=`已吃 <span class="num">${nf(x.kcal)}</span> kcal，還可以吃 <b class="num">${nf(left)} kcal</b>${pLeft>0?`；蛋白質還差 <b class="num">${nf(pLeft)} g</b>，下一餐選雞胸、魚或豆腐。`:`，蛋白質已達標。`}`;
+  else verdict=`今天多了 <b class="num">${nf(-left)} kcal</b>，明天回到計畫就好。${pLeft>0?`蛋白質還差 <span class="num">${nf(pLeft)}</span> g。`:""}`;
+  const pw=plannedWorkout(day);
+  const waterPct=Math.round(clamp(x.water/t.water,0,1)*100);
+  const mealsDone=new Set(x.meals.map(m=>m.slot)).size>=3||x.kcal>=t.kcal*0.85;
+  const actDone=x.actMin>=pw.min;
+  const healthDone=!!x.health;
+  const mark=(done,pct)=>`<span class="mark ${done?"done":pct?"part":""}" ${!done&&pct?`style="--pct:${pct}%"`:""}>${ic("check")}</span>`;
+  const sug=suggestion();
+  const m=MILES.find(z=>z[0]>day)||MILES[4];
+  return `<div class="screen">${header()}
+  <div class="dateline"><span class="h2">${fmtDate(today())}</span><span class="ov">Day ${clamp(day,1,99)} / 30 · ${t.phase.name}</span></div>
+  <section class="card hero" aria-label="今日概況">
+    <div class="ov">Weight</div>
+    <div class="wrow"><div><div class="wbig">${cw?nf(cw,1):"—"}<span class="unit">kg</span></div>
+      <div class="cap" style="margin-top:10px">${sw&&cw?`較起始 <span class="${cw<sw?"pos":""}">${sgn(cw-sw)} kg</span>`:"尚無體重紀錄"}${gw&&cw?` · 距目標 ${nf(Math.max(cw-gw,0),1)} kg`:""}</div></div>
+      ${spark(ser)}</div>
+    <div class="rings">${ring(x.kcal,t.kcal,{t:"熱量攝取",u:" kcal"})}${ring(x.p,t.protein,{t:"蛋白質",u:" g"},"p")}</div>
+    <p class="verdict">${verdict}</p>
+  </section>
+  ${sug?`<section class="card"><div class="ov" style="color:var(--clay-deep)">Weekly Adjustment</div><h3 class="h2" style="margin-top:8px">${esc(sug.title)}</h3><p class="hint" style="margin:6px 0 16px">${esc(sug.body)}</p>
+    <div class="btns"><button class="btn" data-act="applySug">${esc(sug.cta)}</button><button class="btn quiet" data-act="skipSug">本週不調整</button></div></section>`:""}
+  <section class="sec"><div class="sec-h"><h2 class="h2">Today’s Plan</h2><span class="cap">今日計畫</span></div>
+   <div class="card list">
+    <button class="row" data-act="sheet" data-arg="meal">${mark(mealsDone,x.meals.length?Math.round(x.kcal/t.kcal*100):0)}<div class="t"><div>今日飲食</div><div class="cap">${x.meals.length?`${x.meals.length} 筆 · ${nf(x.kcal)} / ${nf(t.kcal)} kcal`:"記錄早餐、午餐、晚餐與點心"}</div></div>${ic("chev","chev")}</button>
+    <button class="row" data-act="sheet" data-arg="act">${mark(actDone,x.actMin?Math.round(x.actMin/pw.min*100):0)}<div class="t"><div>今日活動</div><div class="cap">${esc(pw.label||pw.type)} ${pw.min} 分鐘${x.actMin?` · 已完成 ${x.actMin} 分鐘`:""}</div></div>${ic("chev","chev")}</button>
+    <div class="row">${mark(waterPct>=90,waterPct)}<button class="t" data-act="sheet" data-arg="water" style="text-align:left"><div>今日飲水</div><div class="cap num">${nf(x.water)} / ${nf(t.water)} ml</div></button><button class="mini-btn" data-act="water" data-arg="250">+250 ml</button></div>
+    <button class="row" data-act="sheet" data-arg="health">${mark(healthDone,0)}<div class="t"><div>今日健康紀錄</div><div class="cap">${x.health?healthLine(x.health):"睡眠、精神、排便與心情"}</div></div>${ic("chev","chev")}</button>
+    ${x.weighed?"":`<button class="row" data-act="sheet" data-arg="weight">${mark(false,0)}<div class="t"><div>早晨體重</div><div class="cap">起床如廁後、空腹量最準</div></div>${ic("chev","chev")}</button>`}
+   </div></section>
+  <section class="sec"><div class="sec-h"><h2 class="h2">Wellness Journey</h2><button class="link" data-act="tab" data-arg="journey">健康旅程</button></div>
+   <div class="card"><div class="trio">
+     <div><div class="cap">進度</div><div class="v">${clamp(day,0,30)}<span class="unit">/ 30 天</span></div></div>
+     <div><div class="cap">連續紀錄</div><div class="v">${streak()}<span class="unit">天</span></div></div>
+     <div><div class="cap">下個里程碑</div><div class="v">D${m[0]}<span class="unit">${m[1]}</span></div></div></div>
+     <div class="jbar" style="margin-bottom:0"><i style="width:${clamp(day/30*100,0,100)}%"></i></div></div></section>
+  </div>`;
+}
+function healthLine(h){const a=[];if(h.sleep)a.push("睡 "+h.sleep+" 小時");if(h.energy)a.push("精神 "+h.energy+"/5");if(h.bowel)a.push("排便 "+(h.bowel==="y"?"順暢":"未排"));if(h.period)a.push("生理期");return a.join(" · ")||"已記錄"}
+
+function screenFood(){
+  const d=foodDate,t=targets(d),x=dayData(d);
+  const slots=["早餐","午餐","晚餐","點心"];
+  const isToday=d===today();
+  const mb=(v,tg)=>Math.round(clamp(tg?v/tg:0,0,1)*100);
+  const cT=r5((t.kcal*0.45)/4),fT=r5((t.kcal*0.25)/9);
+  return `<div class="screen"><div class="screen-h"><div><div class="ov">Nutrition</div><h1 class="title" style="margin-top:6px">飲食</h1></div>
+   <div class="btns" style="flex:none;gap:4px"><button class="x" data-act="fday" data-arg="-1" aria-label="前一天" style="width:40px;height:40px">${ic("left","chev")}</button><button class="x" data-act="fday" data-arg="1" aria-label="後一天" style="width:40px;height:40px" ${isToday?"disabled":""}>${ic("chev","chev")}</button></div></div>
+   <div class="cap" style="margin-top:-6px">${isToday?"今天 · ":""}${fmtDate(d)}</div>
+   <section class="card hero"><div class="wrow" style="margin:0;align-items:flex-end"><div><div class="ov">Calories</div><div class="wbig" style="font-size:52px;margin-top:10px">${nf(x.kcal)}<span class="unit">/ ${nf(t.kcal)} kcal</span></div></div></div>
+    <div class="pbar" style="margin-top:16px"><i style="width:${mb(x.kcal,t.kcal)}%"></i></div>
+    <div class="macro">
+     <div><div class="lab"><span class="cap">蛋白質</span><span class="cap num">${nf(x.p)}/${t.protein} g</span></div><div class="pbar p"><i style="width:${mb(x.p,t.protein)}%"></i></div></div>
+     <div><div class="lab"><span class="cap">碳水</span><span class="cap num">${nf(x.c)}/${cT} g</span></div><div class="pbar"><i style="width:${mb(x.c,cT)}%;background:var(--sage)"></i></div></div>
+     <div><div class="lab"><span class="cap">脂肪</span><span class="cap num">${nf(x.f)}/${fT} g</span></div><div class="pbar"><i style="width:${mb(x.f,fT)}%;background:var(--sage)"></i></div></div>
+    </div></section>
+   ${x.meals.length?slots.map(s=>{const items=x.meals.filter(m=>m.slot===s);const k=items.reduce((a,m)=>a+(+m.kcal||0),0);
+     return `<section class="card meal"><div class="mh"><div><h2 class="h2">${s}</h2>${items.length?`<div class="cap num">${nf(k)} kcal</div>`:""}</div><button class="btn ghost" data-act="sheet" data-arg="meal" data-slot="${s}">＋ 新增</button></div>
+     ${items.map(m=>`<div class="it"><div class="nm"><div>${esc(m.name)}</div><div class="cap num">${esc(m.portion||"")}${m.portion?" · ":""}蛋白質 ${nf(m.p)} g</div></div><span class="num">${nf(m.kcal)}<span class="unit">kcal</span></span><button class="x" data-act="delMeal" data-arg="${m.id}" aria-label="刪除 ${esc(m.name)}">${ic("close")}</button></div>`).join("")}</section>`}).join("")
+   :`<section class="card empty">${ART.meal}<h2 class="h2">${isToday?"今天還沒有飲食紀錄":"這天沒有飲食紀錄"}</h2><p class="cap" style="margin:0">記下第一餐，熱量和蛋白質會自動計算。</p><button class="btn" data-act="sheet" data-arg="meal">記錄${isToday?guessSlot():"一餐"}</button></section>`}
+  </div>`;
+}
+function guessSlot(){const h=new Date().getHours();return h<10?"早餐":h<14?"午餐":h<17?"點心":h<21?"晚餐":"點心"}
+
+function screenMove(){
+  const t=targets(),x=dayData(today()),pw=plannedWorkout(t.day);
+  const wk=[...Array(7)].map((_,i)=>dayData(addDays(today(),-i)).actMin).reduce((a,b)=>a+b,0);
+  const stepPct=Math.round(clamp(x.steps/t.steps,0,1)*100);
+  return `<div class="screen"><div class="screen-h"><div><div class="ov">Movement</div><h1 class="title" style="margin-top:6px">活動</h1></div></div>
+  <section class="card hero"><div class="ov">Day ${clamp(t.day,1,99)} · 今日課表</div>
+    <h2 class="title" style="margin-top:10px;font-size:24px">${esc(pw.label||pw.type)}<span class="unit" style="font-size:15px"> ${pw.min} 分鐘</span></h2>
+    <p class="hint" style="margin:8px 0 18px">${esc(pw.desc)}</p>
+    <div class="pbar"><i style="width:${Math.round(clamp(x.actMin/pw.min,0,1)*100)}%"></i></div>
+    <div class="cap num" style="margin:8px 0 18px">已完成 ${x.actMin} / ${pw.min} 分鐘${x.actKcal?` · 約消耗 ${nf(x.actKcal)} kcal`:""}</div>
+    <button class="btn block" data-act="sheet" data-arg="act" data-type="${esc(pw.type)}" data-min="${pw.min}">${x.actMin>=pw.min?"再記錄一項活動":"完成並記錄"}</button></section>
+  <section class="card"><div class="sec-h"><div><div class="cap">今日步數</div><div class="stat" style="padding:0;background:none"><div class="v">${nf(x.steps)}<span class="unit">/ ${nf(t.steps)} 步</span></div></div></div><button class="mini-btn" data-act="sheet" data-arg="steps">更新步數</button></div>
+   <div class="pbar p" style="margin-top:14px"><i style="width:${stepPct}%"></i></div></section>
+  <section class="sec"><div class="sec-h"><h2 class="h2">近 7 天</h2><span class="cap num">共 ${wk} 分鐘</span></div><div class="card">${weekBars()}</div></section>
+  <section class="sec"><div class="sec-h"><h2 class="h2">今日紀錄</h2></div>
+   ${x.acts.length?`<div class="card list">${x.acts.map(a=>`<div class="row"><div class="t"><div>${esc(a.type)}</div><div class="cap num">${a.min} 分鐘 · 約 ${nf(a.kcal)} kcal</div></div><button class="x" data-act="delAct" data-arg="${a.id}" aria-label="刪除">${ic("close")}</button></div>`).join("")}</div>`
+   :`<div class="card empty">${ART.move}<h2 class="h2">今天還沒有活動紀錄</h2><p class="cap" style="margin:0">完成課表後記一筆，消耗熱量會依體重估算。</p><button class="btn" data-act="sheet" data-arg="act">記錄活動</button></div>`}</section>
+  <section class="sec"><h2 class="h2">本週課表</h2><div class="card list">${WEEK.map((w,i)=>{const dd=t.day-((t.day-1)%7)+i;const on=dd===t.day;return `<div class="row"><span class="tag ${on?"clay":""}">D${dd}</span><div class="t"><div style="${on?"font-weight:600":""}">${esc(w.label||w.type)}</div><div class="cap">${w.min} 分鐘</div></div></div>`}).join("")}</div></section>
+  </div>`;
+}
+
+function screenBody(){
+  const seg=`<div class="seg" role="tablist">${[["weight","體重"],["inbody","InBody"],["measure","圍度"]].map(([k,l])=>`<button role="tab" class="${bodySeg===k?"on":""}" data-act="bseg" data-arg="${k}" aria-selected="${bodySeg===k}">${l}</button>`).join("")}</div>`;
+  let body="";
+  if(bodySeg==="weight"){
+    const all=weightSeries();const pts=all.filter(p=>diffDays(p.date,today())<range);
+    const cw=curW(),sw=startW(),rate=weightRate(),h=(S.profile.height||160)/100;
+    body=all.length?`<section class="card hero"><div class="sec-h"><div class="ov">Weight Trend</div><div class="seg" style="padding:3px">${[7,30,90].map(r=>`<button class="${range===r?"on":""}" data-act="range" data-arg="${r}" style="padding:6px 10px;font-size:12px">${r} 天</button>`).join("")}</div></div>
+      <div style="margin-top:12px">${lineChart(pts.length?pts:all.slice(-1),{goal:S.profile.goalWeight,unit:"kg"})}</div></section>
+      <div class="stats"><div class="stat"><div class="cap">目前</div><div class="v">${nf(cw,1)}<span class="unit">kg</span></div><div class="cap d">BMI ${nf(cw/(h*h),1)}</div></div>
+       <div class="stat"><div class="cap">較起始</div><div class="v">${sgn(cw-sw)}<span class="unit">kg</span></div><div class="cap d">${sw?sgn((cw-sw)/sw*100)+"%":""}</div></div>
+       <div class="stat"><div class="cap">目標</div><div class="v">${nf(S.profile.goalWeight,1)}<span class="unit">kg</span></div><div class="cap d">還差 ${nf(Math.max(cw-S.profile.goalWeight,0),1)} kg</div></div>
+       <div class="stat"><div class="cap">近兩週速度</div><div class="v">${rate==null?"—":sgn(-rate,2)}<span class="unit">kg/週</span></div><div class="cap d">${rate==null?"紀錄滿 7 天後計算":rate>=0.25&&rate<=1?"在建議範圍":"建議 0.25–1 kg/週"}</div></div></div>
+      <button class="btn block" data-act="sheet" data-arg="weight">記錄今天體重</button>
+      <section class="sec"><h2 class="h2">最近紀錄</h2><div class="card list">${all.slice(-7).reverse().map(p=>`<div class="row"><div class="t"><div>${fmtDate(p.date)}</div></div><span class="num">${nf(p.v,1)}<span class="unit">kg</span></span></div>`).join("")}</div></section>`
+    :emptyCard(ART.body,"還沒有體重紀錄","每天早上量一次，趨勢圖會幫你看出真正的變化。","記錄體重","weight");
+  }else if(bodySeg==="inbody"){
+    const recs=sortD(S.inbody),l=recs[recs.length-1],f=recs[0];
+    body=recs.length?`<section class="card hero"><div class="sec-h"><div><div class="ov">InBody · ${md(l.date)}</div><div class="cap" style="margin-top:4px">${recs.length>1?`與 ${md(f.date)} 首次量測比較`:"首次量測，下次複測後顯示變化"}</div></div>${l.score?`<span class="tag clay">${l.score} 分</span>`:""}</div>
+      <div class="trio" style="margin-top:18px">${["pbf","smm","bfm"].map(k=>{const m=IB.find(z=>z[0]===k);const d=l[k]!=null&&f[k]!=null&&recs.length>1?l[k]-f[k]:null;const good=k==="smm"?d>0:d<0;
+        return `<div><div class="cap">${m[1]}</div><div class="v">${nf(l[k],1)}<span class="unit">${m[2]}</span></div>${d!=null?`<div class="cap ${good?"pos":""}">${sgn(d)}${m[2]}</div>`:""}</div>`}).join("")}</div></section>
+      <div class="stats">${IB.filter(z=>!["pbf","smm","bfm"].includes(z[0])).map(([k,lab,u,dec])=>{const d=l[k]!=null&&f[k]!=null&&recs.length>1?l[k]-f[k]:null;
+        return `<div class="stat"><div class="cap">${lab}</div><div class="v">${l[k]!=null&&l[k]!==""?nf(l[k],dec):"—"}${u?`<span class="unit">${u}</span>`:""}</div><div class="cap d">${d!=null?sgn(d,dec)+" "+u:k==="vfl"?"建議 10 以下":"&nbsp;"}</div></div>`}).join("")}</div>
+      ${recs.length>1?`<section class="card"><div class="ov">Body Fat %</div><div style="margin-top:10px">${lineChart(recs.filter(r=>r.pbf).map(r=>({date:r.date,v:+r.pbf})),{unit:"%"})}</div></section>`:""}
+      <button class="btn block" data-act="sheet" data-arg="inbody">新增 InBody 量測</button>
+      <section class="sec"><h2 class="h2">量測紀錄</h2><div class="card list">${recs.slice().reverse().map(r=>`<div class="row"><div class="t"><div>${fmtDate(r.date)}</div><div class="cap num">${nf(r.weight,1)} kg · 體脂 ${nf(r.pbf,1)}% · 肌肉 ${nf(r.smm,1)} kg</div></div><button class="x" data-act="delIB" data-arg="${r.id}" aria-label="刪除">${ic("close")}</button></div>`).join("")}</div></section>`
+    :emptyCard(ART.heart,"還沒有 InBody 數據","輸入 InBody 報告上的數字，熱量與蛋白質目標會依你的肌肉量計算。","輸入 InBody","inbody");
+  }else{
+    const recs=sortD(S.measures),l=recs[recs.length-1],f=recs[0];
+    const whr=l&&l.waist&&l.hip?l.waist/l.hip:null;
+    const wser=recs.filter(r=>r.waist).map(r=>({date:r.date,v:+r.waist}));
+    body=recs.length?`<section class="card hero"><div class="sec-h"><div class="ov">Waist · ${md(l.date)}</div>${whr?`<span class="tag ${whr<0.85?"":"clay"}">腰臀比 ${nf(whr,2)}</span>`:""}</div>
+      <div class="wbig" style="font-size:52px;margin-top:12px">${nf(l.waist,1)}<span class="unit">cm</span></div>
+      <div class="cap" style="margin-top:8px">${f!==l&&f.waist?`較起始 <span class="${l.waist<f.waist?"pos":""}">${sgn(l.waist-f.waist)} cm</span> · `:""}${whr?(whr<0.85?"腰臀比在女性建議範圍 (< 0.85)":"女性建議腰臀比 < 0.85"):"量臀圍後可算腰臀比"}</div>
+      ${wser.length>1?`<div style="margin-top:14px">${lineChart(wser,{goal:S.profile.goalWaist||null,unit:"cm"})}</div>`:""}</section>
+      <div class="stats">${MS.filter(z=>z[0]!=="waist").map(([k,lab])=>{const d=f!==l&&l[k]&&f[k]?l[k]-f[k]:null;return `<div class="stat"><div class="cap">${lab}</div><div class="v">${l[k]?nf(l[k],1):"—"}<span class="unit">cm</span></div><div class="cap d ${d<0?"pos":""}">${d!=null?sgn(d)+" cm":"&nbsp;"}</div></div>`}).join("")}
+       <div class="stat"><div class="cap">腰臀比</div><div class="v">${whr?nf(whr,2):"—"}</div><div class="cap d">腰圍 ÷ 臀圍</div></div></div>
+      <button class="btn block" data-act="sheet" data-arg="measure">記錄圍度</button>
+      <p class="hint">每週同一天早上空腹量。腰圍量肚臍上方最細處，臀圍量最寬處，皮尺貼平不勒緊。</p>
+      <section class="sec"><h2 class="h2">量測紀錄</h2><div class="card list">${recs.slice().reverse().map(r=>`<div class="row"><div class="t"><div>${fmtDate(r.date)}</div><div class="cap num">腰 ${nf(r.waist,1)} · 臀 ${nf(r.hip,1)} · 腿 ${nf(r.thigh,1)} cm</div></div><button class="x" data-act="delMS" data-arg="${r.id}" aria-label="刪除">${ic("close")}</button></div>`).join("")}</div></section>`
+    :emptyCard(ART.tape,"還沒有圍度紀錄","腰圍比體重更能看出脂肪變化。每週量一次腰、臀、胸、手臂、大腿與小腿。","記錄圍度","measure");
+  }
+  return `<div class="screen"><div class="screen-h"><div><div class="ov">Body</div><h1 class="title" style="margin-top:6px">身體數據</h1></div></div>${seg}${body}</div>`;
+}
+const emptyCard=(art,h,p,b,arg)=>`<section class="card empty">${art}<h2 class="h2">${h}</h2><p class="cap" style="margin:0;max-width:26em">${p}</p><button class="btn" data-act="sheet" data-arg="${arg}">${b}</button></section>`;
+
+function screenJourney(){
+  const seg=`<div class="seg" role="tablist"><button role="tab" class="${jSeg==="me"?"on":""}" data-act="jseg" data-arg="me">我的旅程</button><button role="tab" class="${jSeg==="team"?"on":""}" data-act="jseg" data-arg="team">團隊挑戰</button></div>`;
+  return `<div class="screen"><div class="screen-h"><div><div class="ov">Wellness Journey</div><h1 class="title" style="margin-top:6px">健康旅程</h1></div></div>${seg}${jSeg==="me"?journeyMe():journeyTeam()}</div>`;
+}
+function journeyMe(){
+  const t=targets(),day=t.day,st=streak();
+  const cells=[...Array(30)].map((_,i)=>{const d=addDays(S.profile.startDate,i);const n=i+1;
+    if(d>today())return `<div class="d future">${n}</div>`;const lv=dayLevel(d);return `<div class="d ${lv?"l"+lv:""} ${d===today()?"today":""}" title="第 ${n} 天">${n}</div>`}).join("");
+  const sw=startW(),cw=curW();const fi=firstOf(S.inbody),li=lastOf(S.inbody);const [fm,lm]=firstLastMeasure("waist");
+  const complete=[...Array(Math.min(day,30))].filter((_,i)=>dayLevel(addDays(S.profile.startDate,i))===3).length;
+  return `<section class="card hero"><div class="sec-h"><div class="ov">Day ${clamp(day,1,99)} / 30</div><span class="tag clay">${t.phase.name} ${t.phase.en}</span></div>
+   <p class="hint" style="margin:10px 0 0">${t.phase.desc}</p>
+   <div class="jbar"><i style="width:${clamp(day/30*100,0,100)}%"></i></div>
+   <div class="ms">${MILES.map(([d,l])=>{const cur=MILES.find(z=>z[0]>day)||MILES[4];return `<div class="m ${d<day?"on":""} ${cur&&cur[0]===d?"cur":""}"><b></b><span>D${d}<br>${l}</span></div>`}).join("")}</div></section>
+  <div class="stats"><div class="stat"><div class="cap">連續紀錄</div><div class="v">${st}<span class="unit">天</span></div><div class="cap d">${st>=7?"已經是習慣了":"每天任一紀錄都算"}</div></div>
+   <div class="stat"><div class="cap">完整達標日</div><div class="v">${complete}<span class="unit">天</span></div><div class="cap d">飲食、活動、喝水都達標</div></div></div>
+  <section class="sec"><div class="sec-h"><h2 class="h2">30 天紀錄</h2></div><div class="card"><div class="days">${cells}</div>
+   <div class="legend cap" style="margin-top:14px"><span><i style="background:var(--clay-soft)"></i>1 項</span><span><i style="background:color-mix(in srgb,var(--clay) 55%,var(--paper))"></i>2 項</span><span><i style="background:var(--clay)"></i>3 項全達標</span></div></div></section>
+  <section class="sec"><h2 class="h2">身體的變化</h2><div class="stats">
+   <div class="stat"><div class="cap">體重</div><div class="v">${sw&&cw?sgn(cw-sw):"—"}<span class="unit">kg</span></div><div class="cap d">${sw?nf(sw,1)+" → "+nf(cw,1):"&nbsp;"}</div></div>
+   <div class="stat"><div class="cap">體脂率</div><div class="v">${fi&&li&&fi!==li?sgn(li.pbf-fi.pbf):"—"}<span class="unit">%</span></div><div class="cap d">${fi&&li&&fi!==li?nf(fi.pbf,1)+" → "+nf(li.pbf,1):"D30 複測後比較"}</div></div>
+   <div class="stat"><div class="cap">腰圍</div><div class="v">${fm&&lm&&fm!==lm?sgn(lm.waist-fm.waist):"—"}<span class="unit">cm</span></div><div class="cap d">${fm&&lm&&fm!==lm?nf(fm.waist,1)+" → "+nf(lm.waist,1):"每週量一次"}</div></div>
+   <div class="stat"><div class="cap">骨骼肌</div><div class="v">${fi&&li&&fi!==li&&fi.smm?sgn(li.smm-fi.smm):"—"}<span class="unit">kg</span></div><div class="cap d">${fi&&li&&fi!==li?"維持或增加最理想":"D30 複測後比較"}</div></div></div></section>
+  <section class="sec"><h2 class="h2">我的計畫</h2><div class="card list">
+   <div class="row"><div class="t"><div>每日熱量</div><div class="cap">TDEE ${nf(t.tdee)} − ${t.phase.def}${S.adj.kcal?` ${sgn(S.adj.kcal,0)} 調整`:""}</div></div><span class="num">${nf(t.kcal)}<span class="unit">kcal</span></span></div>
+   <div class="row"><div class="t"><div>蛋白質</div><div class="cap">每公斤去脂體重 2 g</div></div><span class="num">${t.protein}<span class="unit">g</span></span></div>
+   <div class="row"><div class="t"><div>飲水</div><div class="cap">體重 × 35 ml</div></div><span class="num">${nf(t.water)}<span class="unit">ml</span></span></div>
+   <div class="row"><div class="t"><div>步數</div><div class="cap">${t.phase.name}目標</div></div><span class="num">${nf(t.steps)}<span class="unit">步</span></span></div></div>
+   ${S.adjLog.length?`<div class="card list">${S.adjLog.slice().reverse().map(a=>`<div class="row"><div class="t"><div>${esc(a.cta)}</div><div class="cap">${fmtDate(a.date)} · ${esc(a.title)}</div></div></div>`).join("")}</div>`:`<p class="hint">從第 8 天起，每週依體重變化與 InBody 肌肉量提出個人化調整建議。</p>`}</section>`;
+}
+const TEAM=[{n:"雅婷",w:3.1,f:2.2,ws:4.0,log:33},{n:"佳穎",w:2.2,f:1.4,ws:2.5,log:30},{n:"小涵",w:1.8,f:1.1,ws:2.0,log:27},{n:"欣怡",w:1.5,f:0.8,ws:1.5,log:24}];
+function journeyTeam(){
+  const me=myScore();
+  const pts=m=>Math.round(m.w*10+m.f*10+m.ws*5+m.log);
+  const rows=TEAM.map(m=>({n:m.n,pts:pts(m),line:`體重 −${nf(m.w,1)}% · 腰圍 −${nf(m.ws,1)} cm`,me:false}));
+  rows.push({n:(S.profile.name||"我"),pts:me.total,line:`體重 ${me.wPct>0?"−":""}${nf(Math.abs(me.wPct),1)}% · 腰圍 ${me.waistD>0?"−":""}${nf(Math.abs(me.waistD),1)} cm`,me:true});
+  rows.sort((a,b)=>b.pts-a.pts);
+  const avg=Math.round(rows.reduce((a,r)=>a+r.pts,0)/rows.length);
+  const teams=[{n:"仙女隊",p:avg,me:true},{n:"晨光隊",p:64},{n:"輕盈隊",p:52}].sort((a,b)=>b.p-a.p);
+  const day=planDay();
+  return `<div class="banner"><span class="cap">團隊挑戰為預覽版：你的分數依真實紀錄計算，隊友與其他隊伍為範例。連線版上線後可用邀請碼組隊。</span></div>
+  <section class="card hero"><div class="sec-h"><div class="ov">Team Challenge · 30 Days</div><span class="tag">剩 ${Math.max(30-day,0)} 天</span></div>
+   <div class="trio" style="margin-top:16px"><div><div class="cap">我的積分</div><div class="v">${me.total}</div></div><div><div class="cap">隊伍平均</div><div class="v">${avg}</div></div><div><div class="cap">隊伍排名</div><div class="v">${teams.findIndex(t=>t.me)+1}<span class="unit">/ ${teams.length}</span></div></div></div>
+   <div class="stats" style="margin-top:18px"><div class="stat"><div class="cap">體重下降 %</div><div class="v" style="font-size:22px">${me.w}<span class="unit">分</span></div></div><div class="stat"><div class="cap">體脂率下降</div><div class="v" style="font-size:22px">${me.f}<span class="unit">分</span></div></div>
+    <div class="stat"><div class="cap">腰圍下降</div><div class="v" style="font-size:22px">${me.ws}<span class="unit">分</span></div></div><div class="stat"><div class="cap">每日紀錄</div><div class="v" style="font-size:22px">${me.log}<span class="unit">分</span></div></div></div></section>
+  <section class="sec"><div class="sec-h"><h2 class="h2">仙女隊 個人排名</h2><span class="cap">${rows.length} 人</span></div>
+   <div class="card list lb" style="padding:4px 12px">${rows.map((r,i)=>`<div class="r ${r.me?"me":""}"><span class="rk">${i+1}</span><span class="av">${esc(r.n.slice(0,1))}</span><div class="t"><div>${esc(r.n)}${r.me?' <span class="cap">（你）</span>':""}</div><div class="cap num">${r.line}</div></div><span class="pts">${r.pts}</span></div>`).join("")}</div></section>
+  <section class="sec"><h2 class="h2">隊伍排名</h2><div class="card list lb" style="padding:4px 12px">${teams.map((t,i)=>`<div class="r ${t.me?"me":""}"><span class="rk">${i+1}</span><div class="t"><div>${t.n}</div><div class="cap">隊員平均積分</div></div><span class="pts">${t.p}</span></div>`).join("")}</div></section>
+  <section class="sec"><h2 class="h2">計分方式</h2><div class="card rules">
+   <div><span>體重下降百分比</span><span class="num muted">每 1% = 10 分</span></div>
+   <div><span>體脂率下降（InBody）</span><span class="num muted">每 1 個百分點 = 10 分</span></div>
+   <div><span>腰圍下降</span><span class="num muted">每 1 cm = 5 分</span></div>
+   <div><span>每日紀錄</span><span class="num muted">飲食、活動、喝水各 1 分</span></div>
+   <p class="hint" style="margin:6px 0 0">用百分比計算體重，起始體重不同也公平。隊伍分數為隊員平均，人數不同也能比較。</p></div></section>
+  <section class="card empty" style="padding:24px 20px">${ART.team}<h2 class="h2">邀請夥伴一起挑戰</h2><p class="cap" style="margin:0">連線版開放後，建立隊伍會產生邀請碼，夥伴註冊後輸入即可加入。</p><button class="btn" disabled>建立隊伍（即將開放）</button></section>`;
+}
+
+/* ---------- skeleton ---------- */
+function skeleton(){return `<div class="screen"><div class="top"><div><div class="sk" style="width:96px;height:16px"></div><div class="sk" style="width:140px;height:12px;margin-top:8px"></div></div><div class="sk" style="width:40px;height:40px;border-radius:50%"></div></div>
+ <div class="sk" style="width:55%;height:18px;margin-top:20px"></div>
+ <div class="card hero" style="display:flex;flex-direction:column;gap:14px"><div class="sk" style="width:30%;height:11px"></div><div class="sk" style="width:58%;height:60px"></div><div class="sk" style="width:46%;height:12px"></div>
+ <div style="display:flex;justify-content:space-around;margin-top:14px"><div class="sk" style="width:112px;height:112px;border-radius:50%"></div><div class="sk" style="width:112px;height:112px;border-radius:50%"></div></div></div>
+ <div class="card" style="display:flex;flex-direction:column;gap:18px">${[1,2,3,4].map(()=>`<div style="display:flex;gap:14px;align-items:center"><div class="sk" style="width:26px;height:26px;border-radius:50%"></div><div style="flex:1"><div class="sk" style="width:40%;height:13px"></div><div class="sk" style="width:65%;height:11px;margin-top:7px"></div></div></div>`).join("")}</div></div>`}
+
+/* ---------- render ---------- */
+const TABS=[["today","今日"],["food","飲食"],["move","活動"],["body","身體"],["journey","旅程"]];
+function render(){
+  if(!S||!S.profile){renderOnboarding();return}
+  $("#nav").hidden=false;
+  $("#navin").innerHTML=TABS.map(([k,l])=>`<button class="${tab===k?"on":""}" data-act="tab" data-arg="${k}" aria-current="${tab===k?"page":"false"}">${ic(k)}<span>${l}</span></button>`).join("");
+  const fn={today:screenToday,food:screenFood,move:screenMove,body:screenBody,journey:screenJourney}[tab];
+  app.innerHTML=fn();
+  requestAnimationFrame(()=>requestAnimationFrame(()=>document.querySelectorAll(".arc[data-off]").forEach(a=>a.style.strokeDashoffset=a.dataset.off)));
+}
+function go(t){tab=t;render();window.scrollTo({top:0})}
+
+/* ---------- toast ---------- */
+let tt;function toast(m){const e=$("#toast");e.textContent=m;e.classList.add("show");clearTimeout(tt);tt=setTimeout(()=>e.classList.remove("show"),1900)}
+
+/* ---------- sheets ---------- */
+let sheetCtx={};
+function openSheet(html,ctx={}){
+  sheetCtx=ctx;const sh=$("#sheet"),sc=$("#scrim");
+  sh.innerHTML=`<i class="grab" aria-hidden="true"></i>${html}`;sh.hidden=false;sc.hidden=false;
+  requestAnimationFrame(()=>{sh.classList.add("show");sc.classList.add("show")});
+  const f=sh.querySelector("[autofocus]");if(f&&matchMedia("(hover:hover)").matches)setTimeout(()=>f.focus(),300);
+}
+function closeSheet(){const sh=$("#sheet"),sc=$("#scrim");sh.classList.remove("show");sc.classList.remove("show");setTimeout(()=>{sh.hidden=true;sc.hidden=true;sh.innerHTML=""},280)}
+const shHead=t=>`<div class="sh-h"><h2 class="h2" style="font-size:19px">${t}</h2><button class="x" data-act="close" aria-label="關閉">${ic("close")}</button></div>`;
+const fld=(id,label,{type="number",val="",unit="",step="0.1",ph="",req=false}={})=>`<div class="f"><label for="${id}">${label}</label>${unit?`<div class="in-u"><input id="${id}" name="${id}" type="${type}" inputmode="decimal" step="${step}" value="${val??""}" placeholder="${ph}" ${req?"required":""}><span>${unit}</span></div>`:`<input id="${id}" name="${id}" type="${type}" ${type==="number"?'inputmode="decimal" step="'+step+'"':""} value="${esc(val??"")}" placeholder="${ph}" ${req?"required":""}>`}</div>`;
+
+function sheetMeal(slot){
+  slot=slot||guessSlot();
+  const recent=[];const seen=new Set();S.meals.slice().reverse().forEach(m=>{if(!seen.has(m.name)&&recent.length<6){seen.add(m.name);recent.push(m)}});
+  openSheet(`${shHead("記錄飲食")}<form class="form" data-form="meal">
+   <div class="seg" id="slotSeg">${["早餐","午餐","晚餐","點心"].map(s=>`<button type="button" class="${s===slot?"on":""}" data-act="slot" data-arg="${s}">${s}</button>`).join("")}</div>
+   ${recent.length?`<div><div class="cap" style="margin-bottom:8px">最近吃過，點一下就加入</div><div class="chips">${recent.map(m=>`<button type="button" class="chip" data-act="quickMeal" data-arg="${esc(m.name)}">${esc(m.name)} <span class="num muted">${m.kcal}</span></button>`).join("")}</div></div>`:""}
+   <div class="f"><label for="fq">搜尋常見食物</label><input id="fq" type="search" placeholder="例如：雞胸、豆漿、便當" autocomplete="off"></div>
+   <div class="srch" id="flist">${foodList("")}</div>
+   <div class="grid2">${fld("mname","名稱",{type:"text",ph:"自訂食物",req:true})}${fld("mportion","份量",{type:"text",ph:"1 份"})}</div>
+   <div class="grid2">${fld("mkcal","熱量",{unit:"kcal",step:"1",req:true})}${fld("mp","蛋白質",{unit:"g",step:"0.1"})}</div>
+   <div class="grid2">${fld("mc","碳水",{unit:"g"})}${fld("mf","脂肪",{unit:"g"})}</div>
+   <label class="toggle"><span class="cap" style="color:var(--ink)">存到我的食物，下次直接選</span><button type="button" class="sw" data-act="sw" data-arg="msave" aria-pressed="false"></button></label>
+   <button class="btn block" type="submit">加入${slot}</button></form>`,{slot,msave:false});
+}
+function foodList(q){
+  const mine=S.foods.map(f=>[f.name,f.portion,f.kcal,f.p,f.c,f.f,1]);
+  const all=mine.concat(FOODS);const qq=q.trim();
+  const list=(qq?all.filter(f=>f[0].includes(qq)):all).slice(0,40);
+  if(!list.length)return `<div class="hint" style="padding:14px">找不到「${esc(qq)}」，在下方自行輸入即可。</div>`;
+  return list.map((f,i)=>`<button type="button" data-act="pickFood" data-arg="${esc(f[0])}|${esc(f[1])}|${f[2]}|${f[3]}|${f[4]}|${f[5]}"><span>${esc(f[0])} <span class="cap">${esc(f[1])}${f[6]?" · 我的":""}</span></span><span class="num cap">${f[2]} kcal · ${f[3]} g</span></button>`).join("");
+}
+function sheetAct(type,min){
+  openSheet(`${shHead("記錄活動")}<form class="form" data-form="act">
+   <div><div class="cap" style="margin-bottom:8px">活動類型</div><div class="chips" id="actChips">${ACTS.map(([n])=>`<button type="button" class="chip ${n===(type||"快走")?"on":""}" data-act="pickAct" data-arg="${n}">${n}</button>`).join("")}</div></div>
+   <div><div class="cap" style="margin-bottom:8px">時間</div><div class="chips">${[15,20,30,45,60].map(m=>`<button type="button" class="chip num" data-act="setMin" data-arg="${m}">${m} 分</button>`).join("")}</div></div>
+   ${fld("amin","分鐘",{unit:"分",step:"1",val:min||30,req:true})}
+   <p class="hint" id="actEst"></p>
+   <button class="btn block" type="submit">記錄活動</button></form>`,{atype:type||"快走"});
+  estAct();
+}
+function estAct(){const e=$("#actEst"),m=+($("#amin")||{}).value||0;if(!e)return;const met=(ACTS.find(a=>a[0]===sheetCtx.atype)||[0,4])[1];e.textContent=`依體重 ${nf(curW()||60,1)} kg 估算，約消耗 ${Math.round(met*(curW()||60)*m/60)} kcal。`}
+function sheetWater(){
+  const t=targets(),x=dayData(today());
+  openSheet(`${shHead("記錄飲水")}<div class="form"><div><div class="wbig" style="font-size:48px">${nf(x.water)}<span class="unit">/ ${nf(t.water)} ml</span></div><div class="pbar" style="margin-top:14px"><i style="width:${Math.round(clamp(x.water/t.water,0,1)*100)}%"></i></div></div>
+   <div class="chips">${[150,250,350,500,700].map(v=>`<button class="chip num" data-act="water" data-arg="${v}" data-keep="1">+${v} ml</button>`).join("")}</div>
+   <div class="btns"><button class="btn quiet" data-act="water" data-arg="-250" data-keep="1">減少 250 ml</button><button class="btn" data-act="close">完成</button></div>
+   <p class="hint">一杯馬克杯約 350 ml，一瓶礦泉水約 600 ml。肽纖飲或含纖飲品也算在飲水裡。</p></div>`);
+}
+function sheetWeight(){
+  const l=curW();
+  openSheet(`${shHead("記錄體重")}<form class="form" data-form="weight">${fld("wkg","今天體重",{unit:"kg",val:l?nf(l,1):"",req:true})}${fld("wdate","日期",{type:"date",val:today()})}
+   <p class="hint">早上起床、如廁後、吃東西前量最準。每天的上下波動很正常，看趨勢就好。</p><button class="btn block" type="submit">儲存體重</button></form>`);
+}
+function sheetSteps(){
+  openSheet(`${shHead("今日步數")}<form class="form" data-form="steps">${fld("stp","步數",{unit:"步",step:"1",val:S.steps[today()]||"",req:true})}<p class="hint">從手機健康 App 或手環看今天的步數輸入。</p><button class="btn block" type="submit">儲存</button></form>`);
+}
+function sheetHealth(){
+  const h=S.health[today()]||{};
+  openSheet(`${shHead("今日健康紀錄")}<form class="form" data-form="health">
+   ${fld("hsleep","昨晚睡眠",{unit:"小時",step:"0.5",val:h.sleep||""})}
+   <div class="f"><label>精神與體力</label><div class="scale" id="hEnergy">${[1,2,3,4,5].map(n=>`<button type="button" class="${h.energy===n?"on":""}" data-act="energy" data-arg="${n}">${n}</button>`).join("")}</div><div class="cap" style="display:flex;justify-content:space-between"><span>很累</span><span>精神很好</span></div></div>
+   <div class="f"><label>排便</label><div class="seg" id="hBowel"><button type="button" class="${h.bowel==="y"?"on":""}" data-act="bowel" data-arg="y">順暢</button><button type="button" class="${h.bowel==="n"?"on":""}" data-act="bowel" data-arg="n">今天沒有</button></div></div>
+   <label class="toggle"><span>生理期</span><button type="button" class="sw ${h.period?"on":""}" data-act="sw" data-arg="period" aria-pressed="${!!h.period}"></button></label>
+   <div class="f"><label for="hnote">備註</label><textarea id="hnote" rows="2" placeholder="例如：嘴饞、水腫、壓力大">${esc(h.note||"")}</textarea></div>
+   <button class="btn block" type="submit">儲存紀錄</button></form>`,{energy:h.energy||null,bowel:h.bowel||null,period:!!h.period});
+}
+function sheetInbody(){
+  const l=lastOf(S.inbody)||{};
+  openSheet(`${shHead("新增 InBody 量測")}<form class="form" data-form="inbody">
+   ${fld("ibdate","量測日期",{type:"date",val:today()})}
+   <div class="ov" style="margin-top:4px">身體組成</div>
+   <div class="grid2">${fld("ib_weight","體重",{unit:"kg",val:"",ph:l.weight||"",req:true})}${fld("ib_pbf","體脂率",{unit:"%",ph:l.pbf||"",req:true})}</div>
+   <div class="grid2">${fld("ib_smm","骨骼肌重",{unit:"kg",ph:l.smm||""})}${fld("ib_bfm","體脂肪重",{unit:"kg",ph:l.bfm||""})}</div>
+   <div class="grid2">${fld("ib_bmr","基礎代謝",{unit:"kcal",step:"1",ph:l.bmr||""})}${fld("ib_vfl","內臟脂肪",{unit:"級",step:"1",ph:l.vfl||""})}</div>
+   <div class="ov" style="margin-top:4px">其他數值（選填）</div>
+   <div class="grid2">${fld("ib_tbw","身體總水分",{unit:"L",ph:l.tbw||""})}${fld("ib_protein","蛋白質",{unit:"kg",ph:l.protein||""})}</div>
+   <div class="grid2">${fld("ib_mineral","礦物質",{unit:"kg",step:"0.01",ph:l.mineral||""})}${fld("ib_score","InBody 分數",{unit:"分",step:"1",ph:l.score||""})}</div>
+   <p class="hint">BMI 會依身高自動計算。灰色數字是上次的量測值，方便對照。</p>
+   <button class="btn block" type="submit">儲存 InBody</button></form>`);
+}
+function sheetMeasure(){
+  const l=lastOf(S.measures)||{};
+  openSheet(`${shHead("記錄圍度")}<form class="form" data-form="measure">${fld("msdate","量測日期",{type:"date",val:today()})}
+   <div class="grid2">${MS.map(([k,lab])=>fld("ms_"+k,lab,{unit:"cm",ph:l[k]||"",req:k==="waist"})).join("")}</div>
+   <p class="hint">腰圍：肚臍上方最細處。臀圍：臀部最寬處。上臂、大腿、小腿：量最粗處，左右固定同一側。</p>
+   <button class="btn block" type="submit">儲存圍度</button></form>`);
+}
+function sheetSettings(){
+  const P=S.profile,t=targets();
+  openSheet(`${shHead("個人設定")}<form class="form" data-form="profile">
+   <div class="grid2">${fld("pname","稱呼",{type:"text",val:P.name})}${fld("page","年齡",{unit:"歲",step:"1",val:P.age})}</div>
+   <div class="grid2">${fld("pheight","身高",{unit:"cm",val:P.height})}${fld("pgoal","目標體重",{unit:"kg",val:P.goalWeight})}</div>
+   <div class="grid2">${fld("pgwaist","目標腰圍",{unit:"cm",val:P.goalWaist||""})}${fld("pstart","計畫開始日",{type:"date",val:P.startDate})}</div>
+   <div class="f"><label for="pact">日常活動量</label><select id="pact">${ACT_LV.map(([v,l,d])=>`<option value="${v}" ${+P.activity===v?"selected":""}>${l} · ${d}</option>`).join("")}</select></div>
+   <p class="hint">目前每日目標：${nf(t.kcal)} kcal · 蛋白質 ${t.protein} g · 飲水 ${nf(t.water)} ml</p>
+   <button class="btn block" type="submit">儲存設定</button></form>
+   <div style="margin-top:26px" class="form"><div class="ov">Appearance</div><div class="seg">${[["system","跟隨系統"],["light","淺色"],["dark","深色"]].map(([k,l])=>`<button class="${S.prefs.theme===k?"on":""}" data-act="theme" data-arg="${k}">${l}</button>`).join("")}</div>
+   <div class="ov" style="margin-top:8px">Data</div>
+   <p class="hint" style="margin:0">資料只存在這台裝置的瀏覽器。清除瀏覽器資料會一併刪除，建議定期複製備份碼。</p>
+   <div class="btns"><button class="btn quiet" data-act="backup">複製備份碼</button><button class="btn quiet" data-act="restore">貼上還原</button></div>
+   <button class="btn ghost" data-act="reset" style="align-self:flex-start;color:var(--ink-muted)">清除所有資料並重新開始</button></div>`);
+}
+function sheetBackup(){
+  const code=btoa(unescape(encodeURIComponent(JSON.stringify(S))));
+  openSheet(`${shHead("備份碼")}<div class="form"><p class="hint" style="margin:0">把這段文字存到備忘錄或傳給自己。換手機時用「貼上還原」即可找回全部紀錄。</p>
+   <div class="f"><textarea id="bk" rows="6" readonly style="font-size:12px">${code}</textarea></div><button class="btn block" data-act="copyBk">複製</button></div>`);
+}
+function sheetRestore(){
+  openSheet(`${shHead("貼上還原")}<form class="form" data-form="restore"><p class="hint" style="margin:0">貼上備份碼後，這台裝置目前的資料會被備份內容取代。</p><div class="f"><textarea id="rs" rows="6" placeholder="貼上備份碼" style="font-size:12px" required></textarea></div><button class="btn block" type="submit">還原資料</button></form>`);
+}
+function sheetReset(){
+  openSheet(`${shHead("清除所有資料")}<div class="form"><p style="margin:0">所有飲食、活動、體重、InBody 與圍度紀錄都會刪除，無法復原。</p><div class="btns"><button class="btn quiet" data-act="close">取消</button><button class="btn" data-act="doReset">確認清除</button></div></div>`);
+}
+const SHEETS={meal:(b)=>sheetMeal(b.dataset.slot),act:(b)=>sheetAct(b.dataset.type,b.dataset.min),water:sheetWater,weight:sheetWeight,steps:sheetSteps,health:sheetHealth,inbody:sheetInbody,measure:sheetMeasure};
+
+/* ---------- actions ---------- */
+function commit(msg){save();render();if(msg)toast(msg)}
+document.addEventListener("click",e=>{
+  const b=e.target.closest("[data-act]");if(!b)return;
+  const a=b.dataset.act,v=b.dataset.arg;
+  switch(a){
+    case "tab":go(v);break;
+    case "settings":sheetSettings();break;
+    case "sheet":SHEETS[v]&&SHEETS[v](b);break;
+    case "close":closeSheet();break;
+    case "water":{const d=today();S.water[d]=Math.max(0,(S.water[d]||0)+(+v));save();if(b.dataset.keep){sheetWater()}else{}render();toast(+v>0?"已加入 "+v+" ml":"已減少 "+(-v)+" ml");break}
+    case "fday":{const n=addDays(foodDate,+v);if(n<=today()){foodDate=n;render()}break}
+    case "slot":sheetCtx.slot=v;document.querySelectorAll("#slotSeg button").forEach(x=>x.classList.toggle("on",x.dataset.arg===v));$("[data-form=meal] [type=submit]").textContent="加入"+v;break;
+    case "pickFood":{const [n,p,k,pr,c,f]=v.split("|");$("#mname").value=n;$("#mportion").value=p;$("#mkcal").value=k;$("#mp").value=pr;$("#mc").value=c;$("#mf").value=f;
+      document.querySelectorAll("#flist button").forEach(x=>x.classList.toggle("on",x===b));break}
+    case "quickMeal":{const m=S.meals.slice().reverse().find(x=>x.name===v);if(m){S.meals.push({...m,id:uid(),date:tab==="food"?foodDate:today(),slot:sheetCtx.slot});closeSheet();commit("已加入 "+m.name)}break}
+    case "sw":{sheetCtx[v]=!sheetCtx[v];b.classList.toggle("on",sheetCtx[v]);b.setAttribute("aria-pressed",sheetCtx[v]);break}
+    case "pickAct":sheetCtx.atype=v;document.querySelectorAll("#actChips .chip").forEach(x=>x.classList.toggle("on",x.dataset.arg===v));estAct();break;
+    case "setMin":$("#amin").value=v;estAct();break;
+    case "energy":sheetCtx.energy=+v;document.querySelectorAll("#hEnergy button").forEach(x=>x.classList.toggle("on",x.dataset.arg===v));break;
+    case "bowel":sheetCtx.bowel=v;document.querySelectorAll("#hBowel button").forEach(x=>x.classList.toggle("on",x.dataset.arg===v));break;
+    case "delMeal":S.meals=S.meals.filter(m=>m.id!==v);commit("已刪除");break;
+    case "delAct":S.acts=S.acts.filter(m=>m.id!==v);commit("已刪除");break;
+    case "delIB":S.inbody=S.inbody.filter(m=>m.id!==v);commit("已刪除");break;
+    case "delMS":S.measures=S.measures.filter(m=>m.id!==v);commit("已刪除");break;
+    case "bseg":bodySeg=v;render();break;
+    case "jseg":jSeg=v;render();break;
+    case "range":range=+v;render();break;
+    case "applySug":{const s=suggestion();if(s){Object.entries(s.change).forEach(([k,n])=>S.adj[k]+=n);S.adjLog.push({date:today(),title:s.title,cta:s.cta});S.adjSkip[weekKey()]=1;commit("計畫已更新")}break}
+    case "skipSug":S.adjSkip[weekKey()]=1;commit("本週維持原計畫");break;
+    case "theme":S.prefs.theme=v;applyTheme();save();sheetSettings();break;
+    case "backup":sheetBackup();break;
+    case "copyBk":{const ta=$("#bk");const ok=()=>toast("已複製備份碼");try{navigator.clipboard.writeText(ta.value).then(ok,()=>{ta.select();toast("已選取，請按複製")})}catch(err){ta.select();toast("已選取，請按複製")}break}
+    case "restore":sheetRestore();break;
+    case "reset":sheetReset();break;
+    case "doReset":S=blank();save();closeSheet();obStep=0;ob={};render();break;
+    case "startReal":S=blank();save();obStep=1;ob={};render();break;
+    case "ob":obAction(v);break;
+    case "obAct":obCollect();ob.activity=+v;render();break;
+  }
+});
+document.addEventListener("input",e=>{
+  if(e.target.id==="fq")$("#flist").innerHTML=foodList(e.target.value);
+  if(e.target.id==="amin")estAct();
+});
+document.addEventListener("submit",e=>{
+  const f=e.target.closest("[data-form]");if(!f)return;e.preventDefault();
+  const g=id=>{const el=f.querySelector("#"+id);return el?el.value.trim():""},n=id=>{const v=g(id);return v===""?null:+v};
+  switch(f.dataset.form){
+    case "meal":{const name=g("mname"),kcal=n("mkcal");if(!name||kcal==null)return;
+      const m={id:uid(),date:foodDate&&tab==="food"?foodDate:today(),slot:sheetCtx.slot,name,portion:g("mportion"),kcal:Math.round(kcal),p:n("mp")||0,c:n("mc")||0,f:n("mf")||0};
+      S.meals.push(m);if(sheetCtx.msave&&!S.foods.some(x=>x.name===name))S.foods.push({name,portion:m.portion,kcal:m.kcal,p:m.p,c:m.c,f:m.f});
+      closeSheet();commit("已加入"+m.slot);break}
+    case "act":{const min=n("amin");if(!min)return;const met=(ACTS.find(a=>a[0]===sheetCtx.atype)||[0,4])[1];
+      S.acts.push({id:uid(),date:today(),type:sheetCtx.atype,min:Math.round(min),kcal:Math.round(met*(curW()||60)*min/60)});closeSheet();commit("已記錄 "+sheetCtx.atype);break}
+    case "weight":{const kg=n("wkg"),d=g("wdate")||today();if(!kg)return;S.weights=S.weights.filter(w=>w.date!==d);S.weights.push({date:d,kg});closeSheet();commit("已記錄 "+nf(kg,1)+" kg");break}
+    case "steps":{S.steps[today()]=Math.round(n("stp")||0);closeSheet();commit("步數已更新");break}
+    case "health":{S.health[today()]={sleep:n("hsleep"),energy:sheetCtx.energy,bowel:sheetCtx.bowel,period:sheetCtx.period,note:g("hnote")};closeSheet();commit("健康紀錄已儲存");break}
+    case "inbody":{const r={id:uid(),date:g("ibdate")||today()};IB.forEach(([k])=>{if(k!=="bmi")r[k]=n("ib_"+k)});
+      if(!r.weight||r.pbf==null)return;const h=(S.profile.height||160)/100;r.bmi=r1(r.weight/(h*h));if(r.bfm==null)r.bfm=r1(r.weight*r.pbf/100);
+      S.inbody=S.inbody.filter(x=>x.date!==r.date);S.inbody.push(r);closeSheet();commit("InBody 已儲存，目標已更新");break}
+    case "measure":{const r={id:uid(),date:g("msdate")||today()};MS.forEach(([k])=>r[k]=n("ms_"+k));if(!r.waist)return;S.measures=S.measures.filter(x=>x.date!==r.date);S.measures.push(r);closeSheet();commit("圍度已儲存");break}
+    case "profile":{Object.assign(S.profile,{name:g("pname"),age:n("page"),height:n("pheight"),goalWeight:n("pgoal"),goalWaist:n("pgwaist"),startDate:g("pstart")||S.profile.startDate,activity:+$("#pact").value});closeSheet();commit("設定已儲存");break}
+    case "restore":{try{const o=JSON.parse(decodeURIComponent(escape(atob(g("rs")))));if(!o||!o.v)throw 0;S=Object.assign(blank(),o);closeSheet();applyTheme();commit("資料已還原")}catch(err){toast("備份碼無法辨識，請確認完整貼上")}break}
+    case "ob":obNext();break;
+  }
+});
+$("#scrim").addEventListener("click",closeSheet);
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("#sheet").hidden)closeSheet()});
+(function(){let y0=null;const sh=$("#sheet");sh.addEventListener("touchstart",e=>{if(sh.scrollTop<=0)y0=e.touches[0].clientY},{passive:true});
+ sh.addEventListener("touchmove",e=>{if(y0==null)return;const dy=e.touches[0].clientY-y0;if(dy>0)sh.style.transform=`translateY(${dy}px)`},{passive:true});
+ sh.addEventListener("touchend",e=>{if(y0==null)return;const dy=e.changedTouches[0].clientY-y0;sh.style.transform="";y0=null;if(dy>90)closeSheet()})})();
+
+function applyTheme(){const t=S&&S.prefs?S.prefs.theme:"system";if(t==="system")delete document.documentElement.dataset.theme;else document.documentElement.dataset.theme=t}
+
+/* ---------- onboarding ---------- */
+let obStep=0,ob={};
+function renderOnboarding(){
+  $("#nav").hidden=true;
+  if(obStep===0){app.innerHTML=`<div class="ob"><div class="welcome"><div>
+    <div class="wm">HowSo</div><div class="zh">好瘦生活</div>
+    <p class="lead">不是逼自己變瘦，而是讓健康成為生活的一部分。每天 1 到 3 分鐘，看懂今天吃得怎麼樣、還要做什麼，以及身體有沒有往目標前進。</p>
+    <svg class="arcs" viewBox="0 0 340 90" aria-hidden="true" style="overflow:visible"><g fill="none" stroke-width="8" stroke-linecap="round">
+      <circle cx="44" cy="45" r="36" stroke="var(--sand)"/><path d="M44 9a36 36 0 1 1-36 36" stroke="var(--clay)"/>
+      <circle cx="140" cy="45" r="36" stroke="var(--sand)"/><path d="M140 9a36 36 0 0 1 31 54" stroke="var(--sage-deep)"/>
+      <line x1="210" y1="45" x2="332" y2="45" stroke="var(--sand)"/><line x1="210" y1="45" x2="290" y2="45" stroke="var(--clay)"/></g></svg>
+   </div><div class="form" style="margin-top:36px"><button class="btn block" data-act="ob" data-arg="start">開始 30 天計畫</button><button class="btn quiet block" data-act="ob" data-arg="sample">先看範例</button></div></div></div>`;return}
+  const steps=[null,"基本資料","InBody 數據","身體圍度","目標與計畫"];
+  let body="";
+  if(obStep===1)body=`<h1 class="title">先認識你</h1><p class="hint" style="margin:0">用來估算每日熱量需求。</p>
+   ${fld("o_name","怎麼稱呼你",{type:"text",val:ob.name||"",ph:"例如：Jaynie",req:true})}
+   <div class="grid2">${fld("o_age","年齡",{unit:"歲",step:"1",val:ob.age||"",req:true})}${fld("o_height","身高",{unit:"cm",val:ob.height||"",req:true})}</div>
+   <div class="f"><label>日常活動量</label><div class="card list" style="padding:0 14px">${ACT_LV.map(([v,l,d])=>`<button type="button" class="row" data-act="obAct" data-arg="${v}" style="gap:12px"><div class="t"><div style="font-weight:600">${l}</div><div class="cap">${d}</div></div><span class="tag ${(ob.activity||1.375)===v?"clay":""}">${(ob.activity||1.375)===v?"已選":"選擇"}</span></button>`).join("")}</div></div>`;
+  if(obStep===2)body=`<h1 class="title">輸入 InBody 報告</h1><p class="hint" style="margin:0">體重和體脂率必填，其他有就填。之後可在「身體」頁補齊全部欄位。</p>
+   ${fld("o_ibdate","量測日期",{type:"date",val:ob.ibdate||today()})}
+   <div class="grid2">${fld("o_weight","體重",{unit:"kg",val:ob.weight||"",req:true})}${fld("o_pbf","體脂率",{unit:"%",val:ob.pbf||"",req:true})}</div>
+   <div class="grid2">${fld("o_smm","骨骼肌重",{unit:"kg",val:ob.smm||""})}${fld("o_bmr","基礎代謝",{unit:"kcal",step:"1",val:ob.bmr||""})}</div>
+   <div class="grid2">${fld("o_vfl","內臟脂肪等級",{unit:"級",step:"1",val:ob.vfl||""})}${fld("o_score","InBody 分數",{unit:"分",step:"1",val:ob.score||""})}</div>`;
+  if(obStep===3)body=`<h1 class="title">量一下圍度</h1><p class="hint" style="margin:0">腰圍會用在團隊挑戰計分，其他選填。手邊沒有皮尺可以先跳過。</p>
+   <div class="grid2">${MS.map(([k,l])=>fld("o_"+k,l,{unit:"cm",val:ob[k]||""})).join("")}</div>`;
+  if(obStep===4){
+    const w=ob.weight||60;const L=w*(1-(ob.pbf||30)/100);const B=ob.bmr||(370+21.6*L);const tdee=B*(ob.activity||1.375);
+    const kcal=Math.max(r50(tdee-300),r50(B),1200),pro=clamp(r5(2*L),70,150);
+    body=`<h1 class="title">你的 30 天計畫</h1>
+    <div class="grid2">${fld("o_goal","目標體重",{unit:"kg",val:ob.goal||r1(w*0.95),req:true})}${fld("o_start","開始日期",{type:"date",val:ob.start||today()})}</div>
+    <div class="plan-sum"><div><div class="cap">每日熱量</div><div class="v">${nf(kcal)}</div><div class="cap">kcal</div></div><div><div class="cap">蛋白質</div><div class="v">${pro}</div><div class="cap">g</div></div><div><div class="cap">飲水</div><div class="v">${nf(r50(w*35))}</div><div class="cap">ml</div></div></div>
+    <div class="card list" style="padding:0 18px">${PHASES.map(p=>`<div class="row"><span class="tag ${p.from===1?"clay":""}">D${p.from}–${p.to}</span><div class="t"><div style="font-weight:600">${p.name}</div><div class="cap">${p.desc}</div></div></div>`).join("")}</div>
+    <p class="hint" style="margin:0">建議每週減 0.25–1 kg。熱量不會低於你的基礎代謝。第 8 天起每週依體重與肌肉量自動建議調整。若有慢性疾病、懷孕或哺乳，請先諮詢醫師或營養師。</p>`;
+  }
+  app.innerHTML=`<form class="ob" data-form="ob" novalidate><div class="steps">${[1,2,3,4].map(i=>`<i class="${i<=obStep?"on":""}"></i>`).join("")}</div>
+   <div class="ov" style="margin-bottom:10px">Step ${obStep} / 4 · ${steps[obStep]}</div>
+   <div class="body">${body}</div>
+   <div class="foot"><button type="button" class="btn quiet" data-act="ob" data-arg="back">上一步</button>${obStep===3?`<button type="button" class="btn quiet" data-act="ob" data-arg="skip">跳過</button>`:""}<button type="submit" class="btn">${obStep===4?"開始計畫":"下一步"}</button></div></form>`;
+  window.scrollTo({top:0});
+}
+function obCollect(){document.querySelectorAll(".ob input").forEach(i=>{const k=i.id.replace(/^o_/,"");ob[k]=i.type==="number"?(i.value===""?null:+i.value):i.value})}
+function obAction(v){
+  if(v==="start"){S=blank();obStep=1;render();return}
+  if(v==="sample"){S=sampleData();save();render();return}
+  if(v==="back"){obCollect();obStep=Math.max(0,obStep-1);render();return}
+  if(v==="skip"){obStep=4;render();return}
+}
+function obNext(){
+  obCollect();
+  const need={1:["name","age","height"],2:["weight","pbf"],3:[],4:["goal"]}[obStep];
+  const miss=need.filter(k=>ob[k]==null||ob[k]==="");
+  if(miss.length){const el=$("#o_"+miss[0]);el&&el.focus();toast("請填寫"+(el?el.closest(".f").querySelector("label").textContent:"必填欄位"));return}
+  if(obStep<4){obStep++;render();return}
+  const h=ob.height/100;
+  S=blank();
+  S.profile={name:ob.name,age:ob.age,height:ob.height,activity:ob.activity||1.375,goalWeight:ob.goal,goalWaist:null,startDate:ob.start||today()};
+  S.inbody.push({id:uid(),date:ob.ibdate||today(),weight:ob.weight,pbf:ob.pbf,smm:ob.smm,bfm:r1(ob.weight*ob.pbf/100),bmr:ob.bmr,vfl:ob.vfl,score:ob.score,bmi:r1(ob.weight/(h*h)),tbw:null,protein:null,mineral:null});
+  if(ob.waist){const r={id:uid(),date:ob.ibdate||today()};MS.forEach(([k])=>r[k]=ob[k]??null);S.measures.push(r)}
+  save();tab="today";render();toast("30 天計畫開始了");
+}
+
+/* ---------- sample ---------- */
+function sampleData(){
+  const s=blank();s.sample=true;const st=addDays(today(),-11);
+  s.profile={name:"範例",age:34,height:160,activity:1.375,goalWeight:55,goalWaist:70,startDate:st};
+  s.inbody=[{id:uid(),date:st,weight:60.4,pbf:31.8,smm:22.3,bfm:19.2,bmi:23.6,bmr:1295,vfl:7,tbw:30.1,protein:8.1,mineral:2.92,score:71},
+            {id:uid(),date:addDays(st,9),weight:59.2,pbf:30.9,smm:22.4,bfm:18.3,bmi:23.1,bmr:1291,vfl:6,tbw:30.2,protein:8.2,mineral:2.93,score:73}];
+  s.measures=[{id:uid(),date:st,waist:77.5,hip:96.0,chest:86.0,arm:28.5,thigh:55.0,calf:35.5},{id:uid(),date:addDays(st,7),waist:76.2,hip:95.4,chest:85.5,arm:28.2,thigh:54.4,calf:35.3}];
+  const noise=[0,.2,-.1,.1,-.2,.15,-.05,.1,-.15,.05,-.1,0];
+  for(let i=1;i<12;i++){if(i===9)continue;s.weights.push({date:addDays(st,i),kg:r1(60.4-i*0.14+noise[i])})}
+  const pick=n=>FOODS.find(f=>f[0]===n);
+  const menus=[["早餐",["無糖豆漿","茶葉蛋","地瓜"]],["午餐",["雞腿便當"]],["點心",["希臘優格"]],["晚餐",["鮭魚","燙青菜","糙米飯"]]];
+  const menus2=[["早餐",["燕麥片","牛奶","香蕉"]],["午餐",["雞肉沙拉","鮪魚飯糰"]],["晚餐",["板豆腐","雞胸肉","燙青菜"]]];
+  for(let i=0;i<=11;i++){const d=addDays(st,i);const mm=i%2?menus2:menus;
+    mm.forEach(([slot,items],si)=>{if(i===11&&si>1)return;items.forEach(n=>{const f=pick(n);s.meals.push({id:uid(),date:d,slot,name:f[0],portion:f[1],kcal:f[2],p:f[3],c:f[4],f:f[5]})})});
+    const pw=WEEK[i%7];if(i<11&&i!==6&&i!==3)s.acts.push({id:uid(),date:d,type:pw.type,min:pw.min,kcal:Math.round((ACTS.find(a=>a[0]===pw.type)||[0,4])[1]*59.5*pw.min/60)});
+    s.water[d]=i===11?1000:[1800,2100,1600,2250,2000,1900,2300,1700,2150,2050,2200][i];
+    s.steps[d]=i===11?3200:[6400,7200,5100,8300,8800,7600,6900,9100,8400,7700,8600][i];
+    if(i<11)s.health[d]={sleep:[6.5,7,7.5,6,7,8,7,6.5,7,7.5,7][i],energy:[3,3,4,3,4,4,4,3,4,5,4][i],bowel:i%3?"y":"n",period:false,note:""};
+  }
+  return s;
+}
+
+/* ---------- boot ---------- */
+S=load();
+applyTheme();
+if(S&&S.profile){app.innerHTML=skeleton();setTimeout(render,420)}else{S=S||blank();render()}
+})();
+</script>
+
+</body>
+</html>
