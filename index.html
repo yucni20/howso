@@ -229,6 +229,48 @@ button{cursor:pointer;background:none;border:0;padding:0}
 .f .in-u{position:relative}
 .f .in-u span{position:absolute;right:14px;top:50%;transform:translateY(-50%);font:500 13px var(--font-sans);color:var(--ink-muted);pointer-events:none}
 .f .in-u input{padding-right:52px}
+.f input[type=date]{-webkit-appearance:none;appearance:none;display:block;max-width:100%;min-height:48px;line-height:22px;text-align:left;color:var(--ink)}
+.f input[type=date]::-webkit-date-and-time-value{text-align:left;margin:0}
+.f input[type=date]::-webkit-calendar-picker-indicator{opacity:.5}
+.ai-entry{display:grid;grid-template-columns:1.25fr 1fr;gap:10px}
+.ai-entry .btn{display:flex;align-items:center;justify-content:center;gap:8px;padding:14px 12px;font-size:14px;cursor:pointer}
+.ai-entry svg,.ai-set svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linejoin:round;stroke-linecap:round;flex:none}
+.ai-guide{padding:16px;display:flex;flex-direction:column;gap:10px}
+.ai-guide ol{margin:0;padding-left:20px;font-size:14px;line-height:22px;color:var(--ink)}
+.ai-guide a.btn,.ai-step a.btn{text-decoration:none;text-align:center;display:block}
+.ai-adv summary{cursor:pointer;padding:4px 0;list-style-position:inside}
+.ai-adv[open] summary{margin-bottom:8px}
+.ai-step{display:flex;gap:12px;align-items:flex-start}
+.ai-step .n{width:26px;height:26px;border-radius:50%;background:var(--clay-soft);color:var(--clay-deep);display:grid;place-items:center;font:700 13px var(--font-sans);flex:none;margin-top:1px}
+.ai-step b{font-size:15px;font-weight:600}
+.ai-step>div{flex:1;min-width:0}
+.ai-photo{position:relative;border-radius:var(--r-md);overflow:hidden;background:var(--sand);max-height:240px}
+.ai-photo img{display:block;width:100%;max-height:240px;object-fit:cover}
+.ai-busy{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:rgba(28,27,25,.55);color:#fff;font-size:14px;font-weight:600}
+.ai-busy.show{display:flex}
+.spin{width:28px;height:28px;border-radius:50%;border:3px solid rgba(255,255,255,.35);border-top-color:#fff;animation:aispin .8s linear infinite}
+@keyframes aispin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.spin{animation-duration:2.4s}}
+.ai-total{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;padding:4px 2px}
+.ai-k{font-size:34px;line-height:40px;font-weight:300;margin-top:2px}
+.ai-list{padding:0 16px}
+.ai-item{padding:14px 0;border-bottom:1px solid var(--hairline)}
+.ai-item:last-child{border-bottom:0}
+.ai-item.off .ai-row>.t,.ai-item.off .ai-row>.num{opacity:.4}
+.ai-row{display:flex;align-items:center;gap:12px}
+.ai-row .t>div:first-child{font-size:15px;line-height:21px;font-weight:600}
+.ai-chk{width:24px;height:24px;border-radius:7px;border:1.5px solid var(--sage);display:grid;place-items:center;flex:none}
+.ai-chk svg{width:14px;height:14px;stroke:var(--on-clay);stroke-width:2.6;fill:none;opacity:0}
+.ai-chk.on{background:var(--clay-deep);border-color:var(--clay-deep)}
+.ai-chk.on svg{opacity:1}
+.ai-ctl{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:10px 0 0 36px}
+.ai-k-seg{display:flex;background:var(--sand);border-radius:var(--pill);padding:3px;gap:2px}
+.ai-k-seg button{min-width:38px;padding:6px 8px;border-radius:var(--pill);font:600 13px var(--font-sans);color:var(--ink-muted)}
+.ai-k-seg button.on{background:var(--paper);color:var(--ink);box-shadow:0 1px 2px rgba(48,49,47,.08)}
+.ai-edit{margin:12px 0 0 36px;display:flex;flex-direction:column;gap:10px}
+.ai-edit .f .in-u input{padding-right:40px}
+.ai-err{padding:16px}
+.ai-set{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px}
 .grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
 .grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
 .hint{font-size:13px;line-height:19px;color:var(--ink-muted)}
@@ -311,7 +353,9 @@ const I={
  left:'<path d="m15 5-7 7 7 7"/>',
  check:'<path d="m5 12.5 4.5 4.5L19 7.5"/>',
  close:'<path d="M6 6l12 12M18 6 6 18"/>',
- plus:'<path d="M12 5v14M5 12h14"/>'
+ plus:'<path d="M12 5v14M5 12h14"/>',
+ camera:'<path d="M4 8.5h3l1.6-2.5h6.8L17 8.5h3v10.5H4z"/><circle cx="12" cy="13.5" r="3.6"/>',
+ spark:'<path d="M12 3.5l1.7 4.8 4.8 1.7-4.8 1.7L12 16.5l-1.7-4.8L5.5 10l4.8-1.7zM18.5 15.5l.8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8z"/>'
 };
 const ic=(n,c="")=>`<svg viewBox="0 0 24 24" class="${c}" aria-hidden="true">${I[n]}</svg>`;
 const ART={
@@ -325,13 +369,66 @@ const ART={
 
 /* ---------- data ---------- */
 const FOODS=[
- ["無糖豆漿","400 ml",140,14,8,6],["茶葉蛋","1 顆",75,7,1,5],["水煮蛋","1 顆",75,7,1,5],["地瓜","1 條 200 g",170,3,40,0],
- ["雞胸肉","100 g",165,31,0,4],["超商舒肥雞胸","1 包",120,25,1,2],["糙米飯","半碗",140,3,30,1],["白飯","1 碗",280,5,62,0],
- ["燙青菜","1 份",60,2,6,3],["鮭魚","100 g",200,22,0,12],["板豆腐","半盒 150 g",120,12,3,7],["希臘優格","150 g",130,15,6,4],
- ["香蕉","1 根",105,1,27,0],["蘋果","1 顆",95,0,25,0],["芭樂","1 顆",110,2,24,1],["毛豆","100 g",125,11,9,5],
- ["鮪魚飯糰","1 個",210,7,38,3],["雞腿便當","1 個",750,35,90,25],["牛肉麵","1 碗",650,30,80,20],["燕麥片","40 g",150,5,27,3],
- ["無糖拿鐵","中杯",180,9,14,9],["蛋餅","1 份",290,9,30,15],["雞肉沙拉","1 盒",280,22,14,14],["滷味(蔬菜豆干)","1 份",260,16,20,12],
- ["堅果","1 小把 25 g",160,5,5,14],["乳清蛋白","1 匙",120,24,3,1],["牛奶","240 ml",150,8,12,8],["火鍋(清湯)","1 人份",600,40,40,25]
+ /* 蛋 */
+ ["水煮蛋","1 顆",75,7,1,5,"雞蛋 白煮蛋 蛋"],["茶葉蛋","1 顆",75,7,1,5,"雞蛋 蛋"],["荷包蛋","1 顆",95,7,1,7,"煎蛋 太陽蛋 蛋"],["炒蛋","2 顆",200,13,2,15,"雞蛋 蛋"],
+ ["蒸蛋","1 碗",110,9,2,7,"茶碗蒸 雞蛋 蛋"],["溫泉蛋","1 顆",75,7,1,5,"雞蛋 蛋"],["蛋白","1 顆份",17,4,0,0,"蛋清 雞蛋"],["滷蛋","1 顆",80,7,1,5,"雞蛋 蛋"],
+ ["番茄炒蛋","1 份",220,11,10,15,"蕃茄炒蛋 雞蛋 蛋"],["菜脯蛋","1 份",240,12,4,19,"蘿蔔乾 煎蛋 蛋"],["蝦仁炒蛋","1 份",260,22,3,17,"蝦 雞蛋 蛋"],
+ /* 海鮮 */
+ ["蝦仁","100 g",90,20,0,1,"蝦子 白蝦 鮮蝦"],["白灼蝦","8 尾 約 120 g",110,24,0,1,"蝦子 鮮蝦 蝦"],["鹽水蝦","8 尾 約 120 g",110,24,0,1,"蝦 蝦子"],
+ ["鮭魚","100 g",200,22,0,12,"三文魚 魚"],["鯖魚","100 g",270,19,0,21,"青花魚 魚"],["鱈魚","100 g",90,19,0,1,"魚"],["虱目魚肚","100 g",200,18,0,14,"魚"],
+ ["鯛魚片","100 g",110,20,0,3,"台灣鯛 吳郭魚 魚"],["清蒸魚","1 份 150 g",160,28,2,5,"蒸魚 魚"],["鮪魚罐頭(水煮)","1 罐 80 g",90,19,0,1,"鮪魚 罐頭 魚"],
+ ["花枝","100 g",80,16,2,1,"透抽 小卷 中卷 烏賊 魷魚"],["蛤蜊","100 g",40,7,2,1,"文蛤 蛤蠣"],["蛤蜊湯","1 碗",60,8,3,1,"蛤蠣湯 湯"],["干貝","100 g",95,18,3,1,"扇貝"],
+ ["生魚片","8 片 約 100 g",130,22,0,4,"刺身 鮭魚 鮪魚"],["鮭魚生魚片","8 片 約 100 g",200,22,0,12,"刺身 三文魚"],
+ /* 肉類 */
+ ["雞胸肉","100 g",165,31,0,4,"雞肉 雞胸"],["超商舒肥雞胸","1 包",120,25,1,2,"舒肥雞 雞胸 雞肉"],["雞腿肉(去皮)","100 g",130,20,0,5,"雞腿 雞肉"],
+ ["雞腿(帶皮)","1 支",300,28,0,20,"雞腿 雞肉"],["烤雞腿","1 支",320,28,2,22,"雞腿 雞肉"],["雞翅","2 支",230,20,0,16,"雞肉"],["白斬雞","1 份 120 g",230,26,0,14,"雞肉 雞"],
+ ["鹹酥雞","1 份 150 g",480,24,25,32,"炸雞 雞肉"],["炸雞排","1 片",600,30,35,38,"雞排 炸雞 雞肉"],["烤雞排","1 片",350,38,8,18,"雞排 雞肉"],
+ ["豬里肌","100 g",190,22,0,11,"豬肉 里肌"],["豬五花","100 g",400,14,0,38,"豬肉 五花肉 三層肉"],["梅花豬","100 g",250,18,0,20,"豬肉 梅花肉"],["豬排","1 片",420,26,15,28,"排骨 豬肉"],
+ ["滷肉飯","1 碗(小)",380,10,55,13,"魯肉飯 肉燥飯"],["控肉飯","1 碗",620,18,62,32,"爌肉飯 焢肉"],["瘦肉片","100 g",140,21,0,6,"豬肉 肉片"],
+ ["牛排","200 g",460,50,0,28,"牛肉 沙朗"],["牛腱","100 g",160,30,0,4,"牛肉 滷牛腱"],["牛肉片","100 g",220,20,0,15,"牛肉 火鍋肉片"],["羊肉片","100 g",240,19,0,18,"羊肉"],
+ ["培根","2 片",90,6,0,7,"bacon"],["火腿","2 片",70,8,2,3,"火腿片"],["香腸","1 條",180,7,5,15,"臘腸"],["熱狗","1 條",150,5,2,13,"德式香腸"],["雞肉丸","5 顆",150,12,6,9,"丸子"],
+ /* 豆製品 */
+ ["板豆腐","半盒 150 g",120,12,3,7,"豆腐 傳統豆腐"],["嫩豆腐","1 盒 300 g",150,15,6,8,"豆腐 盒裝豆腐"],["雞蛋豆腐","1 盒 300 g",240,20,8,14,"豆腐 蛋豆腐"],
+ ["豆腐","100 g",80,8,2,5,"板豆腐 嫩豆腐"],["凍豆腐","100 g",130,13,2,8,"豆腐 冰豆腐"],["油豆腐","3 塊",180,12,3,13,"豆腐"],["豆干","2 片 70 g",130,13,3,7,"豆乾 五香豆干"],
+ ["麻婆豆腐","1 份",300,16,10,22,"豆腐"],["皮蛋豆腐","1 份",200,15,4,13,"豆腐 皮蛋"],["臭豆腐(炸)","1 份",450,18,20,33,"臭豆腐 豆腐"],["麻辣臭豆腐","1 份",300,18,10,20,"臭豆腐 豆腐"],
+ ["豆皮","1 片 30 g",110,13,1,6,"腐皮 豆包"],["無糖豆漿","400 ml",140,14,8,6,"豆漿"],["有糖豆漿","400 ml",220,13,26,6,"豆漿 甜豆漿"],["毛豆","100 g",125,11,9,5,"枝豆"],["納豆","1 盒",90,8,6,5,""],
+ /* 主食 */
+ ["白飯","1 碗",280,5,62,0,"米飯 飯"],["白飯(半碗)","半碗",140,3,31,0,"米飯 飯"],["糙米飯","半碗",140,3,30,1,"米飯 飯 五穀飯"],["紫米飯","半碗",150,3,32,1,"米飯 飯"],
+ ["白粥","1 碗",140,3,30,0,"稀飯 粥"],["地瓜粥","1 碗",180,3,40,0,"稀飯 粥 番薯"],["地瓜","1 條 200 g",170,3,40,0,"番薯 蕃薯"],["馬鈴薯","1 顆 150 g",115,3,26,0,"洋芋 土豆"],
+ ["南瓜","100 g",60,1,14,0,""],["玉米","1 根",120,4,25,2,""],["芋頭","100 g",120,2,28,0,""],["燕麥片","40 g",150,5,27,3,"燕麥"],["吐司","1 片",130,4,24,2,"土司 麵包"],
+ ["全麥吐司","1 片",110,5,20,2,"土司 麵包"],["饅頭","1 個",280,8,56,2,"白饅頭"],["貝果","1 個",270,10,53,2,"麵包"],["可頌","1 個",230,5,26,12,"麵包"],["菠蘿麵包","1 個",350,7,52,13,"麵包"],
+ ["陽春麵","1 碗",350,11,65,4,"湯麵 麵"],["乾麵","1 碗",420,12,65,12,"麵 乾拌麵"],["牛肉麵","1 碗",650,30,80,20,"麵"],["餛飩麵","1 碗",450,20,60,13,"麵 雲吞"],
+ ["炒麵","1 盤",600,15,80,24,"麵"],["義大利麵(紅醬)","1 盤",600,20,85,18,"pasta 麵"],["義大利麵(白醬)","1 盤",800,22,80,42,"pasta 麵"],["烏龍麵","1 碗",400,14,70,6,"麵"],
+ ["拉麵","1 碗",650,25,80,24,"麵"],["米粉湯","1 碗",300,8,55,5,"米粉"],["炒米粉","1 盤",450,10,70,14,"米粉"],["冬粉","1 份",160,0,40,0,"粉絲"],["蕎麥麵","1 份 200 g",250,10,50,2,"麵"],
+ ["蝦仁炒飯","1 盤",620,22,85,20,"炒飯"],["蛋炒飯","1 盤",600,16,85,21,"炒飯"],["鮪魚飯糰","1 個",210,7,38,3,"飯糰 超商"],["鮭魚飯糰","1 個",200,7,36,3,"飯糰 超商"],["傳統飯糰","1 個",500,12,75,16,"飯糰"],
+ ["壽司","8 貫",400,18,65,6,"握壽司"],["水餃","10 顆",500,22,55,20,"餃子"],["鍋貼","10 個",600,20,55,33,"煎餃"],["小籠包","8 顆",400,16,40,19,"湯包"],["蘿蔔糕","2 片",200,3,30,8,""],
+ /* 早餐 */
+ ["蛋餅","1 份",290,9,30,15,"早餐"],["起司蛋餅","1 份",350,13,30,20,"早餐 蛋餅"],["鮪魚蛋餅","1 份",340,14,30,18,"早餐 蛋餅"],["火腿蛋吐司","1 份",330,15,30,16,"三明治 早餐"],
+ ["總匯三明治","1 份",400,18,35,21,"三明治 早餐"],["漢堡","1 個",450,20,40,23,"早餐"],["燒餅油條","1 份",500,10,55,27,"早餐"],["飯糰(傳統早餐)","1 個",500,12,75,16,"早餐 飯糰"],
+ /* 便當外食 */
+ ["雞腿便當","1 個",750,35,90,25,"便當"],["排骨便當","1 個",800,32,95,30,"便當"],["鯖魚便當","1 個",750,30,90,28,"便當 魚"],["雞胸便當(健康餐)","1 個",500,38,50,15,"便當 健康餐"],
+ ["自助餐(三菜一肉)","1 份",700,28,80,28,"自助餐 便當"],["雞肉沙拉","1 盒",280,22,14,14,"沙拉"],["凱薩沙拉","1 份",350,10,15,28,"沙拉"],["火鍋(清湯)","1 人份",600,40,40,25,"火鍋"],
+ ["麻辣鍋","1 人份",900,40,40,60,"火鍋"],["滷味(蔬菜豆干)","1 份",260,16,20,12,"滷味"],["鹽水雞","1 份",300,30,10,14,"雞肉"],["關東煮","5 樣",250,15,25,10,"超商"],
+ ["咖哩飯","1 盤",700,20,95,25,"咖哩"],["牛丼","1 碗",700,25,90,25,"牛肉飯 丼飯"],["親子丼","1 碗",650,30,85,18,"丼飯"],["披薩","2 片",550,22,60,24,"pizza"],
+ ["麥當勞大麥克","1 個",530,25,45,28,"漢堡 速食"],["薯條(中)","1 份",330,4,43,16,"速食 炸物"],
+ /* 蔬菜 */
+ ["燙青菜","1 份",60,2,6,3,"青菜 蔬菜"],["炒青菜","1 份",120,3,8,9,"青菜 蔬菜"],["花椰菜","100 g",35,3,7,0,"綠花椰 青花菜 蔬菜"],["高麗菜","100 g",25,1,5,0,"蔬菜"],
+ ["菠菜","100 g",23,3,4,0,"蔬菜"],["番茄","1 顆",30,1,6,0,"蕃茄 西紅柿 蔬菜"],["小番茄","10 顆",30,1,6,0,"聖女番茄 蔬菜"],["小黃瓜","1 條",20,1,4,0,"蔬菜"],
+ ["菇類","100 g",30,3,5,0,"香菇 杏鮑菇 金針菇 蘑菇"],["木耳","100 g",35,1,8,0,"黑木耳"],["生菜沙拉(無醬)","1 碗",30,1,6,0,"沙拉 蔬菜"],["蔬菜湯","1 碗",60,2,10,1,"湯"],
+ ["味噌湯","1 碗",50,4,5,2,"湯"],["玉米濃湯","1 碗",180,4,22,8,"湯"],["酸辣湯","1 碗",130,8,12,5,"湯"],
+ /* 水果 */
+ ["香蕉","1 根",105,1,27,0,"水果"],["蘋果","1 顆",95,0,25,0,"水果"],["芭樂","1 顆",110,2,24,1,"水果"],["奇異果","1 顆",50,1,12,0,"水果"],["柳丁","1 顆",60,1,15,0,"柳橙 橘子 水果"],
+ ["葡萄","15 顆",60,1,16,0,"水果"],["草莓","10 顆",40,1,9,0,"水果"],["藍莓","1 杯 100 g",57,1,14,0,"水果"],["西瓜","1 碗",50,1,12,0,"水果"],["鳳梨","1 碗",80,1,20,0,"水果"],
+ ["芒果","1 碗",100,1,25,0,"水果"],["火龍果","半顆",60,1,13,0,"水果"],["酪梨","半顆",160,2,8,15,"牛油果 水果"],
+ /* 乳品飲料 */
+ ["牛奶","240 ml",150,8,12,8,"鮮奶"],["低脂牛奶","240 ml",110,8,12,3,"鮮奶 牛奶"],["希臘優格","150 g",130,15,6,4,"優格 優酪乳"],["無糖優格","150 g",90,5,7,5,"優格"],
+ ["起司片","1 片",60,4,1,5,"乳酪 cheese"],["乳清蛋白","1 匙",120,24,3,1,"高蛋白 蛋白粉"],["無糖拿鐵","中杯",180,9,14,9,"咖啡 拿鐵"],["美式咖啡","中杯",10,0,2,0,"咖啡 黑咖啡"],
+ ["珍珠奶茶","大杯 全糖",700,4,110,25,"手搖 奶茶"],["珍珠奶茶(微糖)","大杯",500,4,70,22,"手搖 奶茶"],["無糖綠茶","700 ml",0,0,0,0,"手搖 茶"],["鮮奶茶(無糖)","中杯",180,8,14,9,"手搖 奶茶"],
+ ["可樂","1 罐 330 ml",140,0,35,0,"汽水"],["啤酒","1 罐 330 ml",145,1,12,0,"酒"],["紅酒","1 杯 150 ml",125,0,4,0,"酒"],
+ /* 點心 */
+ ["堅果","1 小把 25 g",160,5,5,14,"杏仁 腰果 核桃"],["茶葉蛋+無糖豆漿","1 組",215,21,9,11,"超商"],["蛋白棒","1 條",200,20,20,7,"高蛋白"],["黑巧克力","2 小塊 20 g",110,2,9,8,"巧克力"],
+ ["洋芋片","1 小包 34 g",180,2,17,12,"零食"],["蛋糕","1 片",350,5,40,19,"甜點"],["冰淇淋","1 球",140,2,16,7,"甜點"],["雞蛋糕","5 個",200,5,32,6,"甜點"],["豆花","1 碗",250,8,45,4,"甜點"],
+ ["地瓜球","1 份",350,3,50,15,"炸物 點心"],["蔥油餅","1 片",400,7,45,22,"點心"]
 ];
 const ACTS=[["快走",4.3],["散步",3],["慢跑",8],["力量訓練",5],["瑜伽",3],["皮拉提斯",3.5],["飛輪",7],["游泳",6],["間歇訓練",8],["跳舞",5],["爬樓梯",8]];
 const WEEK=[
@@ -719,8 +816,9 @@ function sheetMeal(slot){
   const recent=[];const seen=new Set();S.meals.slice().reverse().forEach(m=>{if(!seen.has(m.name)&&recent.length<6){seen.add(m.name);recent.push(m)}});
   openSheet(`${shHead("記錄飲食")}<form class="form" data-form="meal">
    <div class="seg" id="slotSeg">${["早餐","午餐","晚餐","點心"].map(s=>`<button type="button" class="${s===slot?"on":""}" data-act="slot" data-arg="${s}">${s}</button>`).join("")}</div>
+   <div class="ai-entry"><label class="btn">${ic("camera")}拍照算熱量<input type="file" accept="image/*" data-ai="photo" hidden></label><button type="button" class="btn quiet" data-act="aiPaste">${ic("spark")}用會員辨識</button></div>
    ${recent.length?`<div><div class="cap" style="margin-bottom:8px">最近吃過，點一下就加入</div><div class="chips">${recent.map(m=>`<button type="button" class="chip" data-act="quickMeal" data-arg="${esc(m.name)}">${esc(m.name)} <span class="num muted">${m.kcal}</span></button>`).join("")}</div></div>`:""}
-   <div class="f"><label for="fq">搜尋常見食物</label><input id="fq" type="search" placeholder="例如：雞胸、豆漿、便當" autocomplete="off"></div>
+   <div class="f"><label for="fq">搜尋常見食物</label><input id="fq" type="search" placeholder="例如：蝦仁、豆腐、蒸蛋、便當" autocomplete="off"></div>
    <div class="srch" id="flist">${foodList("")}</div>
    <div class="grid2">${fld("mname","名稱",{type:"text",ph:"自訂食物",req:true})}${fld("mportion","份量",{type:"text",ph:"1 份"})}</div>
    <div class="grid2">${fld("mkcal","熱量",{unit:"kcal",step:"1",req:true})}${fld("mp","蛋白質",{unit:"g",step:"0.1"})}</div>
@@ -729,11 +827,20 @@ function sheetMeal(slot){
    <button class="btn block" type="submit">加入${slot}</button></form>`,{slot,msave:false});
 }
 function foodList(q){
-  const mine=S.foods.map(f=>[f.name,f.portion,f.kcal,f.p,f.c,f.f,1]);
-  const all=mine.concat(FOODS);const qq=q.trim();
-  const list=(qq?all.filter(f=>f[0].includes(qq)):all).slice(0,40);
-  if(!list.length)return `<div class="hint" style="padding:14px">找不到「${esc(qq)}」，在下方自行輸入即可。</div>`;
-  return list.map((f,i)=>`<button type="button" data-act="pickFood" data-arg="${esc(f[0])}|${esc(f[1])}|${f[2]}|${f[3]}|${f[4]}|${f[5]}"><span>${esc(f[0])} <span class="cap">${esc(f[1])}${f[6]?" · 我的":""}</span></span><span class="num cap">${f[2]} kcal · ${f[3]} g</span></button>`).join("");
+  const mine=S.foods.map(f=>[f.name,f.portion,f.kcal,f.p,f.c,f.f,"",1]);
+  const all=mine.concat(FOODS);const qq=q.trim().toLowerCase().replace(/\s+/g,"");
+  let list;
+  if(!qq)list=all.slice(0,40);
+  else{
+    const score=f=>{const n=f[0].toLowerCase(),al=(f[6]||"").toLowerCase();
+      if(n===qq)return 100;if(n.startsWith(qq))return 90;if(n.includes(qq))return 80;
+      if(al.split(" ").some(x=>x===qq))return 70;if(al.includes(qq))return 60;
+      const hay=n+al,chars=[...qq],hit=chars.filter(c=>hay.includes(c)).length;
+      return chars.length>1&&hit===chars.length?40:chars.length>2&&hit>=chars.length-1?20:0};
+    list=all.map(f=>[f,score(f)+(f[7]?5:0)]).filter(x=>x[1]>0).sort((x,y)=>y[1]-x[1]).map(x=>x[0]).slice(0,40);
+  }
+  if(!list.length)return `<div class="hint" style="padding:14px">找不到「${esc(q.trim())}」，在下方自行輸入，打開「存到我的食物」下次就搜得到。</div>`;
+  return list.map(f=>`<button type="button" data-act="pickFood" data-arg="${esc(f[0])}|${esc(f[1])}|${f[2]}|${f[3]}|${f[4]}|${f[5]}"><span>${esc(f[0])} <span class="cap">${esc(f[1])}${f[7]?" · 我的":""}</span></span><span class="num cap">${f[2]} kcal · ${f[3]} g</span></button>`).join("");
 }
 function sheetAct(type,min){
   openSheet(`${shHead("記錄活動")}<form class="form" data-form="act">
@@ -801,6 +908,8 @@ function sheetSettings(){
    <p class="hint">目前每日目標：${nf(t.kcal)} kcal · 蛋白質 ${t.protein} g · 飲水 ${nf(t.water)} ml</p>
    <button class="btn block" type="submit">儲存設定</button></form>
    <div style="margin-top:26px" class="form"><div class="ov">Appearance</div><div class="seg">${[["system","跟隨系統"],["light","淺色"],["dark","深色"]].map(([k,l])=>`<button class="${S.prefs.theme===k?"on":""}" data-act="theme" data-arg="${k}">${l}</button>`).join("")}</div>
+   <div class="ov" style="margin-top:8px">AI Photo</div>
+   <div class="card ai-set"><div style="min-width:0"><div style="font-weight:600">AI 拍照算熱量</div><div class="cap">${aiStatusLine()}</div></div><button type="button" class="mini-btn" data-act="aiSetup">${aiCfg()?"變更":"設定"}</button></div>
    <div class="ov" style="margin-top:8px">Data</div>
    <p class="hint" style="margin:0">資料只存在這台裝置的瀏覽器。清除瀏覽器資料會一併刪除，建議定期複製備份碼。</p>
    <div class="btns"><button class="btn quiet" data-act="backup">複製備份碼</button><button class="btn quiet" data-act="restore">貼上還原</button></div>
@@ -819,11 +928,213 @@ function sheetReset(){
 }
 const SHEETS={meal:(b)=>sheetMeal(b.dataset.slot),act:(b)=>sheetAct(b.dataset.type,b.dataset.min),water:sheetWater,weight:sheetWeight,steps:sheetSteps,health:sheetHealth,inbody:sheetInbody,measure:sheetMeasure};
 
+/* ---------- AI 拍照算熱量 ---------- */
+const AI_KEY="howso:ai";
+const AI_PROV={
+ gemini:{name:"Google Gemini",tag:"推薦 · 有免費額度",model:"gemini-flash-latest",fallback:["gemini-3.8-flash","gemini-3.5-flash-lite"],get:"https://aistudio.google.com/apikey",
+   steps:["用 Google 帳號登入 Google AI Studio","點「Create API key / 建立 API 金鑰」","複製產生的金鑰，貼到下方"],cost:"免費額度通常足夠個人每天使用；超過時會暫時無法辨識，隔一段時間再試即可。"},
+ openai:{name:"ChatGPT（OpenAI API）",tag:"需另外儲值",model:"gpt-5.4-mini",get:"https://platform.openai.com/api-keys",
+   steps:["登入 OpenAI Platform（和 ChatGPT 同帳號）","在 Billing 先儲值（最低約 5 美元）","到 API keys 建立金鑰，複製貼到下方"],cost:"ChatGPT Plus 會員不包含 API，需另外儲值；每張照片約台幣幾毛錢。"},
+ claude:{name:"Claude（Anthropic API）",tag:"需另外儲值",model:"claude-haiku-5-5",get:"https://console.anthropic.com/settings/keys",
+   steps:["登入 Claude Console（可用同一個 Email）","在 Billing 先儲值（最低約 5 美元）","到 API Keys 建立金鑰，複製貼到下方"],cost:"Claude Pro 會員不包含 API，需另外儲值；每張照片約台幣幾毛錢。"}
+};
+function aiCfg(){try{return JSON.parse(localStorage.getItem(AI_KEY))||null}catch(e){return null}}
+function aiSave(c){try{c?localStorage.setItem(AI_KEY,JSON.stringify(c)):localStorage.removeItem(AI_KEY)}catch(e){}}
+const AI_RULES=`你是台灣的營養師，請辨識照片中的食物，估計「照片中實際份量」的熱量與營養素。
+規則：
+1. 每一道可分開的食物各列一項（例如：白飯、滷雞腿、燙青菜）；混在一起的料理（例如炒飯、牛肉麵）算一項。
+2. 依台灣常見份量與照片中的實際大小估計；有包裝或營養標示時，以標示為準。
+3. 名稱用繁體中文；份量寫具體，例如「1 碗約 200 g」「半盒 150 g」。
+4. 熱量取整數，蛋白質、碳水、脂肪可到小數一位。`;
+const AI_JSON_PROMPT=AI_RULES+`
+5. 如果照片裡不是食物，items 回傳空陣列，並在 note 說明。
+只回傳 JSON，不要其他文字：{"items":[{"name":"","portion":"","kcal":0,"protein":0,"carbs":0,"fat":0}],"note":"一句話說明估算依據或不確定的地方"}`;
+const AI_PASTE_PROMPT=AI_RULES+`
+5. 只輸出下面格式，每項一行，數字不要加單位，不要其他說明：
+名稱｜份量｜熱量｜蛋白質｜碳水｜脂肪
+6. 最後一行可以加「備註：」寫一句估算依據。
+範例：
+滷雞腿｜1 支約 150 g｜310｜28｜2｜21
+白飯｜半碗約 100 g｜140｜3｜31｜0
+備註：雞腿看起來帶皮`;
+
+let aiPending=null; // {file, slot}
+let aiLast=null;    // {dataUrl, mime, b64, slot}
+
+function shrinkImage(file,max=1024){
+  return new Promise((res,rej)=>{const url=URL.createObjectURL(file),img=new Image();
+    img.onload=()=>{const k=Math.min(1,max/Math.max(img.naturalWidth,img.naturalHeight));const w=Math.round(img.naturalWidth*k),h=Math.round(img.naturalHeight*k);
+      const cv=document.createElement("canvas");cv.width=w;cv.height=h;cv.getContext("2d").drawImage(img,0,0,w,h);URL.revokeObjectURL(url);
+      const dataUrl=cv.toDataURL("image/jpeg",0.82);res({dataUrl,mime:"image/jpeg",b64:dataUrl.split(",")[1]})};
+    img.onerror=()=>{URL.revokeObjectURL(url);rej(new Error("讀不到這張照片，請換一張或重新拍攝"))};img.src=url});
+}
+function pickJSON(t){const a=t.indexOf("{"),b=t.lastIndexOf("}");if(a<0||b<a)throw new Error("AI 的回覆看不懂，請再試一次");return JSON.parse(t.slice(a,b+1))}
+async function aiFetch(url,opt,ms=60000){
+  const ac=new AbortController(),tm=setTimeout(()=>ac.abort(),ms);
+  try{const r=await fetch(url,{...opt,signal:ac.signal});const txt=await r.text();let j=null;try{j=JSON.parse(txt)}catch(e){}
+    if(!r.ok){const msg=(j&&(j.error&&(j.error.message||j.error.type)))||txt.slice(0,160);const e=new Error(msg);e.status=r.status;throw e}return j}
+  catch(e){if(e.name==="AbortError")throw new Error("辨識逾時，請確認網路後再試一次");if(e.status)throw e;throw new Error("網路連線失敗，請確認網路後再試一次")}
+  finally{clearTimeout(tm)}
+}
+function aiErr(e,prov){
+  const s=e.status,m=String(e.message||"");
+  if(s===400&&/api key|API_KEY|invalid/i.test(m)||s===401||s===403&&/key|permission|auth/i.test(m))return "金鑰不正確或沒有權限，請到設定重新貼上金鑰。";
+  if(s===429)return prov==="gemini"?"免費額度暫時用完或太頻繁，請稍等一分鐘再試。":"使用太頻繁或餘額不足，請稍後再試或確認已儲值。";
+  if(s===402||/credit|balance|billing|quota|insufficient/i.test(m))return "API 餘額不足，請到官網儲值後再試。";
+  if(s===404)return "找不到這個 AI 模型，請到設定的「進階」改用其他模型名稱。";
+  if(s>=500)return "AI 服務暫時忙碌，請稍後再試。";
+  return m||"辨識失敗，請再試一次";
+}
+async function aiCall(cfg,img,prompt){
+  const p=cfg.provider,key=cfg.key.trim(),model=(cfg.model||AI_PROV[p].model).trim();
+  if(p==="gemini"){
+    const tryModel=async md=>{const j=await aiFetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(md)}:generateContent`,{method:"POST",
+      headers:{"Content-Type":"application/json","x-goog-api-key":key},
+      body:JSON.stringify({contents:[{role:"user",parts:[{text:prompt},...(img?[{inline_data:{mime_type:img.mime,data:img.b64}}]:[])]}],generationConfig:img?{responseMimeType:"application/json"}:{}})});
+      const parts=(((j.candidates||[])[0]||{}).content||{}).parts||[];const t=parts.map(x=>x.text||"").join("");if(!t)throw new Error("AI 沒有回覆內容，請換張清楚一點的照片再試");return t};
+    const list=[model].concat(cfg.model?[]:AI_PROV.gemini.fallback);let last;
+    for(const md of list){try{return await tryModel(md)}catch(e){last=e;if(e.status!==404)throw e}}throw last;
+  }
+  if(p==="openai"){
+    const j=await aiFetch("https://api.openai.com/v1/chat/completions",{method:"POST",headers:{"Content-Type":"application/json","Authorization":"Bearer "+key},
+      body:JSON.stringify({model,messages:[{role:"user",content:[{type:"text",text:prompt},...(img?[{type:"image_url",image_url:{url:img.dataUrl}}]:[])]}],...(img?{response_format:{type:"json_object"}}:{})})});
+    return ((j.choices||[])[0]||{}).message?.content||"";
+  }
+  const j=await aiFetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
+    body:JSON.stringify({model,max_tokens:1500,messages:[{role:"user",content:[...(img?[{type:"image",source:{type:"base64",media_type:img.mime,data:img.b64}}]:[]),{type:"text",text:prompt}]}]})});
+  return (j.content||[]).filter(x=>x.type==="text").map(x=>x.text).join("");
+}
+const numOf=v=>{const n=parseFloat(String(v??"").replace(/[^\d.\-]/g,""));return isFinite(n)?n:0};
+function normItems(arr){return (arr||[]).map(x=>({name:String(x.name||"").trim(),portion:String(x.portion||"1 份").trim(),kcal:Math.round(numOf(x.kcal??x.calories)),
+  p:r1(numOf(x.protein??x.p)),c:r1(numOf(x.carbs??x.c)),f:r1(numOf(x.fat??x.f)),k:1,on:true})).filter(x=>x.name&&x.kcal>=0)}
+function parsePasted(t){
+  t=String(t||"").trim();if(!t)return {items:[],note:""};
+  if(/^\s*[\[{]/.test(t)||/```json/.test(t)){try{const o=pickJSON(t);return {items:normItems(o.items||o),note:o.note||""}}catch(e){}}
+  let note="";const items=[];
+  t.split(/\r?\n/).forEach(line=>{const L=line.replace(/^[\s>*\-•`]+|`+$/g,"").trim();if(!L)return;
+    const nm=L.match(/^(備註|說明|note)[:：]\s*(.+)/i);if(nm){note=nm[2];return}
+    if(!/[|｜]/.test(L))return;const c=L.split(/[|｜]/).map(s=>s.trim()).filter((s,i,a)=>!(s===""&&(i===0||i===a.length-1)));
+    if(c.length<6||/^:?-+:?$/.test(c[0])||!/\d/.test(c[2]))return;
+    items.push({name:c[0],portion:c[1],kcal:Math.round(numOf(c[2])),p:r1(numOf(c[3])),c:r1(numOf(c[4])),f:r1(numOf(c[5])),k:1,on:true})});
+  return {items,note};
+}
+
+/* --- sheets --- */
+function aiStatusLine(){const c=aiCfg();return c&&c.key?`已設定 ${AI_PROV[c.provider].name}`:"尚未設定"}
+function sheetAIKey(prov){
+  const c=aiCfg()||{};prov=prov||c.provider||"gemini";const P=AI_PROV[prov];const same=c.provider===prov;
+  openSheet(`${shHead("設定 AI 拍照辨識")}<form class="form" data-form="aikey">
+   <div class="seg" id="aiProv">${Object.entries(AI_PROV).map(([k,v])=>`<button type="button" class="${k===prov?"on":""}" data-act="aiProv" data-arg="${k}">${k==="gemini"?"Gemini":k==="openai"?"ChatGPT":"Claude"}</button>`).join("")}</div>
+   <div class="card ai-guide"><div class="sec-h" style="margin:0"><b>${P.name}</b><span class="tag ${prov==="gemini"?"":"clay"}">${P.tag}</span></div>
+    <ol>${P.steps.map(s=>`<li>${s}</li>`).join("")}</ol>
+    <a class="btn quiet block" href="${P.get}" target="_blank" rel="noopener">前往取得金鑰</a>
+    <p class="hint" style="margin:10px 0 0">${P.cost}</p></div>
+   <div class="f"><label for="aik">API 金鑰</label><input id="aik" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="貼上金鑰" value="${same?esc(c.key||""):""}" required></div>
+   <details class="ai-adv"><summary class="cap">進階：模型名稱</summary>${fld("aim","模型",{type:"text",val:same?(c.model||""):"",ph:P.model})}<p class="hint" style="margin:6px 0 0">留空會用預設的 ${P.model}。只有在出現「找不到模型」時才需要改。</p></details>
+   <p class="hint" style="margin:0">金鑰只存在這支手機，辨識時直接傳給 ${P.name}，不會經過其他地方，也不會包含在備份碼裡。請勿把金鑰分享給別人。</p>
+   <p class="hint" id="aiTestMsg" style="margin:0"></p>
+   <button class="btn block" type="submit">儲存並測試</button>
+   ${c.key?`<button type="button" class="btn ghost" data-act="aiRemove" style="align-self:center;color:var(--ink-muted)">移除已儲存的金鑰</button>`:""}</form>`,{aiProv:prov});
+}
+function sheetAIPaste(slot){
+  openSheet(`${shHead("用 ChatGPT / Claude 會員辨識")}<form class="form" data-form="aipaste">
+   <p class="hint" style="margin:0">不用金鑰、不用另外付費，用你手機上的 ChatGPT 或 Claude App 辨識，再把結果貼回來。</p>
+   <div class="ai-step"><span class="n">1</span><div><b>複製辨識指令</b><button type="button" class="btn quiet block" data-act="aiCopyPrompt" style="margin-top:8px">複製指令</button></div></div>
+   <div class="ai-step"><span class="n">2</span><div><b>開啟 App，上傳食物照片並貼上指令送出</b><div class="btns" style="margin-top:8px"><a class="btn quiet" href="https://chatgpt.com/" target="_blank" rel="noopener">開啟 ChatGPT</a><a class="btn quiet" href="https://claude.ai/new" target="_blank" rel="noopener">開啟 Claude</a></div></div></div>
+   <div class="ai-step"><span class="n">3</span><div style="flex:1;min-width:0"><b>複製 AI 的回覆，貼在這裡</b><div class="f" style="margin-top:8px"><textarea id="aipt" rows="5" placeholder="滷雞腿｜1 支約 150 g｜310｜28｜2｜21" required></textarea></div>
+    <button type="button" class="btn ghost" data-act="aiPasteClip" style="padding:8px 0">從剪貼簿貼上</button></div></div>
+   <button class="btn block" type="submit">帶入結果</button></form>`,{slot});
+}
+function sheetAIPhoto(){
+  const L=aiLast;
+  openSheet(`${shHead("AI 拍照算熱量")}<div class="form">
+   <div class="ai-photo"><img src="${L.dataUrl}" alt="食物照片"><div class="ai-busy" id="aiBusy"><i class="spin"></i><span>辨識中，約 5–15 秒…</span></div></div>
+   <div id="aiOut"></div>
+   <div class="f"><label for="ainote">補充說明（選填）</label><input id="ainote" type="text" placeholder="例如：飯只吃半碗、湯沒喝、是去皮雞腿" autocomplete="off"></div>
+   <div class="btns"><label class="btn quiet" style="text-align:center">換一張<input type="file" accept="image/*" data-ai="photo" hidden></label><button type="button" class="btn quiet" data-act="aiRetry">依說明重新辨識</button></div>
+  </div>`,{slot:L.slot,items:[],note:""});
+}
+function aiResultHTML(){
+  const it=sheetCtx.items||[];if(!it.length)return `<div class="card hint">${esc(sheetCtx.note||"沒有辨識到食物，換個角度或光線再拍一次。")}</div>`;
+  const on=it.filter(x=>x.on),T=on.reduce((a,x)=>({kcal:a.kcal+x.kcal*x.k,p:a.p+x.p*x.k,c:a.c+x.c*x.k,f:a.f+x.f*x.k}),{kcal:0,p:0,c:0,f:0});
+  return `<div class="ai-total"><div><div class="ov">AI 估算合計</div><div class="num ai-k">${nf(Math.round(T.kcal))}<span class="unit">kcal</span></div></div>
+     <div class="cap num" style="text-align:right">蛋白質 ${nf(T.p,1)} g<br>碳水 ${nf(T.c,1)} g · 脂肪 ${nf(T.f,1)} g</div></div>
+   <div class="card list ai-list">${it.map((x,i)=>`<div class="ai-item ${x.on?"":"off"}">
+     <div class="ai-row"><button type="button" class="ai-chk ${x.on?"on":""}" data-act="aiTog" data-arg="${i}" aria-pressed="${x.on}" aria-label="選取">${ic("check")}</button>
+      <div class="t" style="flex:1;min-width:0"><div>${esc(x.name)}</div><div class="cap">${esc(x.portion)}${x.k!==1?` × ${x.k}`:""}</div></div>
+      <div class="num" style="text-align:right">${nf(Math.round(x.kcal*x.k))}<span class="unit">kcal</span><div class="cap">${nf(x.p*x.k,1)} g 蛋白</div></div></div>
+     <div class="ai-ctl"><div class="ai-k-seg">${[0.5,1,1.5,2].map(k=>`<button type="button" class="${x.k===k?"on":""}" data-act="aiK" data-arg="${i}|${k}">${k===0.5?"½":k===1.5?"1½":k}</button>`).join("")}</div>
+      <button type="button" class="mini-btn" data-act="aiEdit" data-arg="${i}">修改</button></div>
+     ${x.edit?`<div class="ai-edit"><div class="grid2">${fld("ae_n"+i,"名稱",{type:"text",val:x.name})}${fld("ae_k"+i,"熱量",{unit:"kcal",step:"1",val:x.kcal})}</div>
+      <div class="grid3">${fld("ae_p"+i,"蛋白",{unit:"g",val:x.p})}${fld("ae_c"+i,"碳水",{unit:"g",val:x.c})}${fld("ae_f"+i,"脂肪",{unit:"g",val:x.f})}</div>
+      <button type="button" class="btn quiet block" data-act="aiEditOk" data-arg="${i}">完成修改</button></div>`:""}
+    </div>`).join("")}</div>
+   ${sheetCtx.note?`<p class="hint" style="margin:0">AI 說明：${esc(sheetCtx.note)}</p>`:""}
+   <p class="hint" style="margin:0">AI 估算僅供參考，份量差很多時可調整倍數或按「修改」。</p>
+   <div class="seg" id="slotSeg">${["早餐","午餐","晚餐","點心"].map(s=>`<button type="button" class="${s===sheetCtx.slot?"on":""}" data-act="aiSlot" data-arg="${s}">${s}</button>`).join("")}</div>
+   <label class="toggle"><span class="cap" style="color:var(--ink)">也存到我的食物，下次直接選</span><button type="button" class="sw ${sheetCtx.msave?"on":""}" data-act="sw" data-arg="msave" aria-pressed="${!!sheetCtx.msave}"></button></label>
+   <button type="button" class="btn block" data-act="aiAdd" ${on.length?"":"disabled"}>加入${sheetCtx.slot}（${on.length} 項）</button>`;
+}
+function aiRender(){const o=$("#aiOut");if(o)o.innerHTML=aiResultHTML()}
+function sheetAIResult(items,note,slot){
+  openSheet(`${shHead("確認辨識結果")}<div class="form"><div id="aiOut"></div><button type="button" class="btn ghost" data-act="aiPasteAgain" style="align-self:center">重新貼上</button></div>`,{slot,items,note,msave:false});aiRender();
+}
+async function aiRun(){
+  const cfg=aiCfg();if(!cfg||!cfg.key){aiPending={slot:aiLast.slot};sheetAIKey();return}
+  const busy=$("#aiBusy"),out=$("#aiOut");if(busy)busy.classList.add("show");if(out)out.innerHTML="";
+  const note=($("#ainote")||{}).value||"";
+  try{const t=await aiCall(cfg,aiLast,AI_JSON_PROMPT+(note.trim()?`\n使用者補充：${note.trim()}`:""));const o=pickJSON(t);
+    sheetCtx.items=normItems(o.items);sheetCtx.note=o.note||"";if(!$("#aiOut"))return;aiRender();}
+  catch(e){if(out)out.innerHTML=`<div class="card ai-err"><b>沒有辨識成功</b><p class="hint" style="margin:6px 0 10px">${esc(aiErr(e,cfg.provider))}</p><div class="btns"><button type="button" class="btn quiet" data-act="aiRetry">再試一次</button><button type="button" class="btn quiet" data-act="aiSetup">檢查設定</button></div></div>`}
+  finally{const b=$("#aiBusy");if(b)b.classList.remove("show")}
+}
+async function aiStartPhoto(file,slot){
+  if(!file)return;try{aiLast={...(await shrinkImage(file)),slot}}catch(e){toast(e.message);return}
+  const cfg=aiCfg();if(!cfg||!cfg.key){aiPending={slot};sheetAIKey();toast("先設定一次 AI 金鑰，之後拍照就能直接算");return}
+  sheetAIPhoto();aiRun();
+}
+function aiAddMeals(){
+  const d=tab==="food"&&foodDate?foodDate:today(),on=(sheetCtx.items||[]).filter(x=>x.on);if(!on.length)return;
+  on.forEach(x=>{const k=x.k,m={id:uid(),date:d,slot:sheetCtx.slot,name:x.name,portion:k===1?x.portion:`${x.portion} × ${k}`,kcal:Math.round(x.kcal*k),p:r1(x.p*k),c:r1(x.c*k),f:r1(x.f*k)};S.meals.push(m);
+    if(sheetCtx.msave&&!S.foods.some(f=>f.name===m.name))S.foods.push({name:m.name,portion:m.portion,kcal:m.kcal,p:m.p,c:m.c,f:m.f})});
+  closeSheet();commit(`已加入${sheetCtx.slot} ${on.length} 項`);
+}
+function aiCopy(text,okMsg){try{navigator.clipboard.writeText(text).then(()=>toast(okMsg),()=>toast("無法自動複製，請長按選取"))}catch(e){toast("無法自動複製，請長按選取")}}
+function aiAction(a,v,b){
+  switch(a){
+    case "aiPaste":sheetAIPaste(sheetCtx.slot);return true;
+    case "aiPasteAgain":sheetAIPaste(sheetCtx.slot);return true;
+    case "aiSetup":sheetAIKey();return true;
+    case "aiProv":sheetAIKey(v);return true;
+    case "aiRemove":aiSave(null);toast("已移除金鑰");sheetSettings();return true;
+    case "aiCopyPrompt":aiCopy(AI_PASTE_PROMPT,"已複製指令，到 App 貼上");return true;
+    case "aiPasteClip":try{navigator.clipboard.readText().then(t=>{$("#aipt").value=t;toast("已貼上")},()=>toast("請長按輸入框選「貼上」"))}catch(e){toast("請長按輸入框選「貼上」")}return true;
+    case "aiRetry":if(aiLast){if(!$("#aiOut"))sheetAIPhoto();aiRun()}return true;
+    case "aiTog":{const x=sheetCtx.items[+v];x.on=!x.on;aiRender();return true}
+    case "aiK":{const [i,k]=v.split("|");sheetCtx.items[+i].k=+k;aiRender();return true}
+    case "aiEdit":{const x=sheetCtx.items[+v];x.edit=!x.edit;aiRender();return true}
+    case "aiEditOk":{const i=+v,x=sheetCtx.items[i],gv=id=>($("#"+id)||{}).value;x.name=(gv("ae_n"+i)||x.name).trim();x.kcal=Math.round(numOf(gv("ae_k"+i)));x.p=r1(numOf(gv("ae_p"+i)));x.c=r1(numOf(gv("ae_c"+i)));x.f=r1(numOf(gv("ae_f"+i)));x.edit=false;aiRender();return true}
+    case "aiSlot":sheetCtx.slot=v;aiRender();return true;
+    case "aiAdd":aiAddMeals();return true;
+  }
+  return false;
+}
+async function aiSubmitKey(f){
+  const prov=sheetCtx.aiProv,key=f.querySelector("#aik").value.trim(),model=(f.querySelector("#aim")||{}).value?.trim()||"";
+  const msg=$("#aiTestMsg"),btn=f.querySelector("[type=submit]");if(!key)return;
+  btn.disabled=true;btn.textContent="測試中…";msg.textContent="";
+  const cfg={provider:prov,key,model};
+  try{await aiCall(cfg,null,"請只回覆：OK");aiSave(cfg);toast("設定完成");
+    if(aiPending&&aiLast){const s=aiPending.slot;aiPending=null;aiLast.slot=s;sheetAIPhoto();aiRun()}else{aiPending=null;sheetSettings()}}
+  catch(e){msg.textContent="測試失敗："+aiErr(e,prov);msg.style.color="var(--clay-deep)";btn.disabled=false;btn.textContent="儲存並測試"}
+}
+
 /* ---------- actions ---------- */
 function commit(msg){save();render();if(msg)toast(msg)}
 document.addEventListener("click",e=>{
   const b=e.target.closest("[data-act]");if(!b)return;
   const a=b.dataset.act,v=b.dataset.arg;
+  if(a.startsWith("ai")&&aiAction(a,v,b))return;
   switch(a){
     case "tab":go(v);break;
     case "settings":sheetSettings();break;
@@ -860,6 +1171,9 @@ document.addEventListener("click",e=>{
     case "obAct":obCollect();ob.activity=+v;render();break;
   }
 });
+document.addEventListener("change",e=>{
+  const t=e.target;if(t.matches&&t.matches('input[data-ai="photo"]')&&t.files&&t.files[0]){const f=t.files[0];t.value="";aiStartPhoto(f,sheetCtx.slot||guessSlot())}
+});
 document.addEventListener("input",e=>{
   if(e.target.id==="fq")$("#flist").innerHTML=foodList(e.target.value);
   if(e.target.id==="amin")estAct();
@@ -884,6 +1198,8 @@ document.addEventListener("submit",e=>{
     case "profile":{Object.assign(S.profile,{name:g("pname"),age:n("page"),height:n("pheight"),goalWeight:n("pgoal"),goalWaist:n("pgwaist"),startDate:g("pstart")||S.profile.startDate,activity:+$("#pact").value});closeSheet();commit("設定已儲存");break}
     case "restore":{try{const o=JSON.parse(decodeURIComponent(escape(atob(g("rs")))));if(!o||!o.v)throw 0;S=Object.assign(blank(),o);closeSheet();applyTheme();commit("資料已還原")}catch(err){toast("備份碼無法辨識，請確認完整貼上")}break}
     case "ob":obNext();break;
+    case "aikey":aiSubmitKey(f);break;
+    case "aipaste":{const r=parsePasted(g("aipt"));if(!r.items.length){toast("看不到符合格式的結果，請確認有複製 AI 的完整回覆");break}sheetAIResult(r.items,r.note,sheetCtx.slot||guessSlot());break}
   }
 });
 $("#scrim").addEventListener("click",closeSheet);
