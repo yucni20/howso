@@ -265,6 +265,12 @@ button{cursor:pointer;background:none;border:0;padding:0}
 .plan-sum .v{font:300 26px/30px var(--font-sans);margin-top:4px;font-variant-numeric:tabular-nums}
 
 /* supplements & report */
+.cats{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin:0 calc(-1 * max(20px,env(safe-area-inset-right,0px))) 0 calc(-1 * max(20px,env(safe-area-inset-left,0px)));padding:2px 20px}
+.cats::-webkit-scrollbar{display:none}
+.chip.sm{padding:9px 12px;font-size:13px;white-space:nowrap;flex:none}
+.srch button>span:first-child{overflow:hidden;text-overflow:ellipsis}
+.pick{display:flex;flex-direction:column;gap:0;padding:16px;border-color:var(--clay-deep)}
+.pick-sum{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;margin:18px 0 14px;padding-top:14px;border-top:1px solid var(--hairline)}
 .stepper{display:flex;align-items:center;background:var(--sand);border-radius:var(--pill);padding:4px}
 .stepper button{width:44px;height:40px;border-radius:var(--pill);font:500 22px/1 var(--font-sans);display:grid;place-items:center;transition:background var(--dur-fast)}
 .stepper button:active{background:var(--paper)}
@@ -344,15 +350,10 @@ const ART={
 };
 
 /* ---------- data ---------- */
-const FOODS=[
- ["無糖豆漿","400 ml",140,14,8,6],["茶葉蛋","1 顆",75,7,1,5],["水煮蛋","1 顆",75,7,1,5],["地瓜","1 條 200 g",170,3,40,0],
- ["雞胸肉","100 g",165,31,0,4],["超商舒肥雞胸","1 包",120,25,1,2],["糙米飯","半碗",140,3,30,1],["白飯","1 碗",280,5,62,0],
- ["燙青菜","1 份",60,2,6,3],["鮭魚","100 g",200,22,0,12],["板豆腐","半盒 150 g",120,12,3,7],["希臘優格","150 g",130,15,6,4],
- ["香蕉","1 根",105,1,27,0],["蘋果","1 顆",95,0,25,0],["芭樂","1 顆",110,2,24,1],["毛豆","100 g",125,11,9,5],
- ["鮪魚飯糰","1 個",210,7,38,3],["雞腿便當","1 個",750,35,90,25],["牛肉麵","1 碗",650,30,80,20],["燕麥片","40 g",150,5,27,3],
- ["無糖拿鐵","中杯",180,9,14,9],["蛋餅","1 份",290,9,30,15],["雞肉沙拉","1 盒",280,22,14,14],["滷味(蔬菜豆干)","1 份",260,16,20,12],
- ["堅果","1 小把 25 g",160,5,5,14],["乳清蛋白","1 匙",120,24,3,1],["牛奶","240 ml",150,8,12,8],["火鍋(清湯)","1 人份",600,40,40,25]
-];
+const FOOD_DB={"早餐店": "火腿蛋吐司|1 份|300|13|30|14\n培根蛋吐司|1 份|360|14|30|20\n起司蛋吐司|1 份|320|14|30|16\n肉鬆蛋吐司|1 份|330|13|36|15\n鮪魚蛋吐司|1 份|340|16|30|17\n燻雞蛋吐司|1 份|350|20|32|15\n豬排蛋吐司|1 份|450|20|40|23\n雞排蛋吐司|1 份|470|22|40|24\n總匯三明治|1 份|430|18|38|22\n火腿起司三明治|1 份|300|13|30|14\n鮪魚三明治|1 份|320|13|30|16\n花生厚片|1 片|330|8|40|15\n奶酥厚片|1 片|360|6|42|18\n巧克力厚片|1 片|350|6|44|16\n草莓厚片|1 片|300|5|48|9\n奶油厚片|1 片|300|6|36|15\n蒜香厚片|1 片|320|6|36|17\n法式吐司|1 份|380|10|44|18\n火腿蛋堡|1 個|300|13|32|13\n豬肉蛋堡|1 個|420|18|34|23\n燻雞堡|1 個|340|19|34|13\n鮪魚蛋堡|1 個|340|15|32|16\n牛肉起司堡|1 個|450|21|34|25\n卡拉雞腿堡|1 個|500|22|42|26\n原味蛋餅|1 份|250|8|28|12\n起司蛋餅|1 份|310|11|28|17\n火腿蛋餅|1 份|290|11|29|14\n培根蛋餅|1 份|350|11|28|21\n玉米蛋餅|1 份|300|9|36|13\n鮪魚蛋餅|1 份|330|14|28|17\n肉鬆蛋餅|1 份|320|11|34|15\n九層塔蛋餅|1 份|260|8|29|12\n薯餅蛋餅|1 份|380|10|40|19\n黑胡椒鐵板麵(加蛋)|1 份|520|15|70|20\n蘑菇鐵板麵(加蛋)|1 份|510|15|68|20\n蘿蔔糕|2 片|230|3|36|8\n蘿蔔糕加蛋|1 份|310|9|36|14\n荷包蛋|1 顆|100|6|0|8\n薯餅|1 片|150|1|15|9\n麥克雞塊|5 塊|250|12|15|16\n熱狗|1 根|150|6|3|13\n煎餃|8 顆|420|14|44|21\n早餐店奶茶|中杯|200|2|30|8\n早餐店紅茶|中杯|130|0|33|0\n早餐店鮮奶茶|中杯|220|7|28|9\n米漿|中杯|250|5|45|6", "中式早餐": "燒餅油條|1 套|470|9|52|25\n燒餅夾蛋|1 份|380|13|40|19\n燒餅|1 個|250|6|35|9\n油條|1 根|230|4|23|14\n蔥抓餅|1 片|330|6|38|17\n蔥抓餅加蛋|1 份|410|12|38|23\n蔥油餅|1 片|300|5|36|15\n傳統飯糰|1 個|500|12|80|14\n紫米飯糰|1 個|520|12|85|14\n鹹豆漿|1 碗|250|14|22|11\n甜豆漿|中杯 500 ml|250|14|36|7\n小籠包|8 顆|380|15|36|19\n生煎包|4 顆|420|15|44|20\n水煎包|1 顆|200|6|25|8\n肉包|1 顆|250|10|32|9\n菜包|1 顆|180|5|30|4\n饅頭|1 個|280|8|56|2\n饅頭夾蛋|1 個|370|14|56|10\n鍋貼|8 顆|450|15|45|23\n韭菜盒|1 個|280|8|30|14\n地瓜稀飯|1 碗|180|3|40|0\n清粥小菜|1 套|350|15|45|11", "手搖飲": "珍珠奶茶|大杯 700 ml|490|3|70|18|160\n波霸奶茶|大杯 700 ml|490|3|70|18|160\n珍珠鮮奶茶|大杯 700 ml|470|11|70|12|160\n黑糖珍珠鮮奶|大杯 700 ml|580|11|95|12\n奶茶|大杯 700 ml|250|1|25|15|160\n鮮奶茶|大杯 700 ml|230|10|18|11|160\n紅茶拿鐵|大杯 700 ml|230|10|18|11|160\n烏龍拿鐵|大杯 700 ml|230|10|18|11|160\n抹茶拿鐵|大杯 700 ml|260|10|22|12|160\n芋頭鮮奶|大杯 700 ml|420|11|60|14|100\n可可牛奶|大杯 700 ml|380|11|50|14\n豆漿紅茶|大杯 700 ml|200|10|14|10|160\n椰果奶茶|大杯 700 ml|340|1|50|15|160\n布丁奶茶|大杯 700 ml|400|5|45|21|160\n仙草凍奶茶|大杯 700 ml|320|2|42|15|160\n奶蓋綠茶|大杯 700 ml|250|3|10|22|160\n紅茶|大杯 700 ml|0|0|0|0|160\n綠茶|大杯 700 ml|0|0|0|0|160\n烏龍茶|大杯 700 ml|0|0|0|0|160\n四季春|大杯 700 ml|0|0|0|0|160\n青茶|大杯 700 ml|0|0|0|0|160\n檸檬綠茶|大杯 700 ml|20|0|5|0|160\n金桔檸檬|大杯 700 ml|40|0|10|0|160\n百香綠茶|大杯 700 ml|60|0|15|0|160\n柳橙綠茶|大杯 700 ml|80|1|20|0|160\n芒果綠茶|大杯 700 ml|80|0|20|0|160\n多多綠茶|大杯 700 ml|120|1|28|0|160\nQQ綠茶|大杯 700 ml|300|1|72|1|160\n水果茶|大杯 700 ml|200|1|48|0|100\n冬瓜茶|大杯 700 ml|300|0|75|0\n冬瓜檸檬|大杯 700 ml|320|0|80|0\n蜂蜜檸檬|大杯 700 ml|200|0|50|0\n楊枝甘露|大杯 700 ml|430|4|80|10\n加料：珍珠|1 份|150|0|37|0\n加料：椰果|1 份|80|0|20|0\n加料：芋圓|1 份|180|1|43|0\n加料：布丁|1 個|120|3|17|4\n加料：仙草|1 份|30|0|7|0\n加料：奶蓋|1 份|150|2|5|14", "咖啡與飲料": "美式咖啡|中杯|10|0|2|0\n拿鐵|中杯 360 ml|180|9|14|9\n燕麥奶拿鐵|中杯 360 ml|190|3|25|8\n卡布奇諾|中杯|130|7|10|7\n焦糖瑪奇朵|中杯|240|8|33|8\n摩卡|中杯|290|9|36|12\n無糖拿鐵|中杯|180|9|14|9\n無糖豆漿|400 ml|140|14|6|6\n鮮乳|240 ml|150|8|12|8\n低脂鮮乳|240 ml|110|8|12|3\n巧克力牛奶|290 ml|200|7|30|6\n優酪乳|200 ml|140|6|22|3\n柳橙汁|300 ml|130|1|30|0\n椰子水|330 ml|60|1|14|0\n運動飲料|600 ml|150|0|37|0\n可樂|330 ml 罐|140|0|35|0\n零卡可樂|330 ml 罐|0|0|0|0\n氣泡水|1 瓶|0|0|0|0\n啤酒|330 ml 罐|140|1|11|0\n紅酒|1 杯 150 ml|125|0|4|0", "便當自助餐": "雞腿便當|1 個|750|35|90|25\n排骨便當|1 個|800|30|95|32\n控肉便當|1 個|900|25|90|48\n魚排便當|1 個|700|25|90|25\n燒肉便當|1 個|780|28|95|30\n三寶便當|1 個|850|30|100|35\n自助餐(1 飯 2 葷 3 素)|1 盒|700|28|90|25\n雞肉飯|1 碗|380|14|60|9\n滷肉飯|小碗|330|8|45|13\n控肉飯|1 碗|550|14|50|33\n豬腳飯|1 份|750|35|80|32\n咖哩飯|1 盤|700|18|100|24\n蛋包飯|1 盤|750|22|95|30\n炒飯|1 盤|650|18|90|23\n滷蛋|1 顆|90|7|2|6\n滷豆腐|1 塊|100|8|3|6", "麵食小吃": "牛肉麵|1 碗|650|30|80|20\n陽春麵|1 碗|350|10|65|5\n麻醬乾麵|1 碗|500|14|70|18\n炸醬麵|1 碗|550|18|70|20\n擔仔麵|1 碗|300|10|45|8\n大腸麵線|1 碗|400|12|60|12\n蚵仔麵線|1 碗|380|12|58|11\n水餃|10 顆|500|20|55|22\n餛飩湯|1 碗|250|12|20|13\n紅油抄手|1 份|400|16|35|22\n炒米粉|1 盤|450|10|65|16\n米粉湯|1 碗|250|6|45|4\n肉圓|1 顆|300|8|45|10\n碗粿|1 個|300|7|52|7\n筒仔米糕|1 個|350|10|50|12\n潤餅|1 捲|400|15|55|13\n刈包|1 個|400|13|40|21\n胡椒餅|1 個|400|14|40|20\n蚵仔煎|1 份|450|12|45|24\n台南牛肉湯|1 碗|200|25|2|9\n虱目魚粥|1 碗|350|20|45|10\n鹹粥|1 碗|300|12|45|8\n酸辣湯|1 碗|130|7|12|6\n貢丸湯|1 碗|150|9|4|11\n豬血湯|1 碗|150|10|5|9\n滷味(蔬菜豆干)|1 份|260|16|20|12", "夜市炸物": "雞排|1 塊|650|35|35|40\n鹽酥雞|1 份 200 g|550|30|25|36\n炸臭豆腐|1 份|450|18|25|30\n麻辣臭豆腐|1 份|350|20|15|24\n甜不辣|1 份|300|8|40|12\n地瓜球|1 份|330|3|50|13\n大腸包小腸|1 份|600|18|60|32\n烤香腸|1 根|250|10|5|21\n烤玉米|1 根|250|6|45|5\n蔥油餅加蛋|1 份|380|11|37|21\n雞蛋糕|5 個|250|6|40|7", "超商": "鮪魚飯糰|1 個|210|7|38|3\n肉鬆飯糰|1 個|200|5|38|3\n茶葉蛋|1 顆|75|7|1|5\n超商舒肥雞胸|1 包|120|25|1|2\n超商地瓜|1 條 200 g|170|3|40|0\n超商三明治|1 個|300|11|32|14\n大亨堡|1 個|330|10|35|16\n雞肉沙拉|1 盒|280|22|14|14\n微波義大利麵|1 盒|600|18|80|22\n微波便當|1 個|650|22|85|24\n關東煮：白蘿蔔|1 塊|15|0|3|0\n關東煮：玉米|1 塊|90|3|18|1\n關東煮：魚板竹輪|1 串|80|6|8|2\n關東煮：貢丸|1 串|130|7|4|10\n高蛋白飲|1 瓶|150|20|10|3", "火鍋燒烤": "火鍋(清湯)|1 人份|600|40|40|25\n麻辣鍋|1 人份|900|45|45|60\n火鍋料綜合|1 份|250|12|20|13\n梅花豬肉片|100 g|300|17|0|25\n雞腿肉片|100 g|180|18|0|11\n牛五花燒肉|100 g|380|15|0|35", "港式茶餐廳": "菠蘿油|1 個|400|7|45|21\n菠蘿包|1 個|300|6|48|9\n奶油多士|1 份|300|6|30|17\n炒蛋多士|1 份|380|14|30|22\n西多士|1 份|600|12|60|35\n豬扒包|1 個|480|22|45|23\n餐蛋公仔麵|1 碗|550|18|55|29\n沙嗲牛肉麵|1 碗|550|22|55|26\n火腿通粉|1 碗|380|14|50|13\n常餐(麵+蛋+多士)|1 份|750|25|75|38\n雞扒飯|1 碟|750|32|90|28\n叉燒煎蛋飯|1 碟|750|30|90|30\n焗豬扒飯|1 份|850|30|95|38\n咖喱牛腩飯|1 碟|750|28|85|32\n乾炒牛河|1 碟|800|25|90|38\n星洲炒米|1 碟|650|20|80|26\n揚州炒飯|1 碟|700|20|95|26\n福建炒飯|1 碟|750|25|95|28\n港式奶茶|1 杯|120|4|10|7|60\n鴛鴦|1 杯|110|3|10|6|60\n凍檸茶|1 杯|10|0|2|0|140\n檸檬水|1 杯|10|0|2|0|100\n阿華田|1 杯|200|5|32|5\n好立克|1 杯|220|5|35|6", "港式點心": "蝦餃|4 件|180|8|20|7\n燒賣|4 件|240|12|10|16\n叉燒包|1 個|180|6|28|5\n蝦腸粉|1 碟|280|12|40|7\n叉燒腸粉|1 碟|300|10|42|10\n鳳爪|1 碟|250|16|8|17\n豉汁排骨|1 碟|300|16|8|23\n糯米雞|1 個|450|15|55|19\n煎蘿蔔糕|3 件|300|4|40|14\n馬拉糕|1 件|250|4|40|8\n春卷|3 條|300|6|28|18\n奶黃包|1 個|200|4|30|7\n流沙包|1 個|220|4|30|9\n牛肉球|3 粒|200|14|8|13\n鹹水角|3 個|300|5|35|16\n酥皮蛋撻|1 個|260|4|25|16", "燒味粥粉麵": "叉燒飯|1 碟|650|25|90|20\n燒肉飯|1 碟|750|25|85|35\n燒鵝飯|1 碟|750|28|85|33\n海南雞飯|1 碟|700|30|85|26\n雙拼飯|1 碟|720|28|88|28\n雲吞麵|1 碗|380|18|50|11\n牛腩麵|1 碗|500|25|55|19\n魚蛋河|1 碗|350|12|60|6\n車仔麵(3 餸)|1 碗|600|22|70|26\n艇仔粥|1 碗|300|15|40|9\n皮蛋瘦肉粥|1 碗|250|14|35|6\n及第粥|1 碗|330|18|38|11\n炸兩|1 份|350|5|45|16\n齋腸粉|1 碟|250|4|42|7", "港澳街頭小食": "咖喱魚蛋|1 串 7 粒|200|10|15|11\n街頭燒賣|1 串|150|4|15|8\n雞蛋仔|1 份|300|6|48|9\n格仔餅|1 份|350|6|45|16\n碗仔翅|1 碗|150|6|15|7\n牛雜|1 份|300|20|5|22\n煎釀三寶|1 份|300|12|25|17\n葡撻|1 個|230|3|24|13\n澳門豬扒包|1 個|500|25|45|24\n杏仁餅|1 塊|100|2|14|4\n豬肉乾|1 片 50 g|170|12|17|6\n木糠布甸|1 杯|350|5|30|23\n馬介休薯球|3 個|300|10|25|18\n水蟹粥|1 碗|350|20|40|10\n葡國雞飯|1 份|850|35|85|40\n免治飯|1 份|750|25|85|33\n非洲雞|1 份|800|50|10|60", "蛋白質": "雞胸肉|100 g|165|31|0|4\n去皮雞腿肉|100 g|180|26|0|8\n豬里肌|100 g|190|22|0|11\n瘦牛肉|100 g|190|26|0|9\n沙朗牛排|200 g|500|45|0|35\n鮭魚|100 g|200|22|0|12\n鯖魚|100 g|260|19|0|20\n鯛魚片|100 g|110|21|0|3\n蝦仁|100 g|90|20|0|1\n水煮鮪魚罐|1 罐|120|26|0|1\n水煮蛋|1 顆|75|7|1|5\n蛋白|2 顆|35|7|0|0\n板豆腐|半盒 150 g|120|12|3|7\n嫩豆腐|1 盒|150|14|5|8\n豆干|2 片|140|14|4|8\n毛豆|100 g|125|11|9|5\n希臘優格|150 g|130|15|6|4\n無糖優格|150 g|90|5|7|5\n乳清蛋白|1 匙|120|24|3|1", "主食": "白飯|1 碗|280|5|62|0\n半碗白飯|半碗|140|3|31|0\n糙米飯|半碗|140|3|30|1\n五穀飯|1 碗|300|7|63|2\n地瓜|1 條 200 g|170|3|40|0\n馬鈴薯|1 顆 150 g|115|3|26|0\n南瓜|100 g|60|2|13|0\n玉米|1 根|180|5|38|2\n燕麥片|40 g|150|5|27|3\n全麥吐司|1 片|80|4|14|1\n白吐司|1 片|120|4|22|2\n義大利麵(熟)|1 盤 250 g|400|14|78|3\n烏龍麵|1 份|270|7|56|1\n冬粉|1 把|140|0|35|0", "蔬菜": "燙青菜|1 份|60|2|6|3\n炒青菜|1 盤|150|3|8|12\n生菜沙拉(不含醬)|1 碗|30|1|6|0\n花椰菜|100 g|35|3|7|0\n番茄|1 顆|30|1|7|0\n小黃瓜|1 條|20|1|4|0\n菇類|100 g|30|3|5|0\n木耳|100 g|35|1|8|0\n海帶|100 g|20|1|4|0", "水果": "香蕉|1 根|105|1|27|0\n蘋果|1 顆|95|0|25|0\n芭樂|1 顆|110|2|24|1\n奇異果|1 顆|60|1|14|0\n芒果|1 顆|200|2|50|1\n柳丁|1 顆|60|1|15|0\n葡萄|10 顆|70|1|18|0\n西瓜|1 片|90|2|22|0\n鳳梨|1 碗|80|1|21|0\n木瓜|1 碗|60|1|15|0\n草莓|10 顆|40|1|9|0\n小番茄|15 顆|45|2|9|0\n藍莓|1 杯|85|1|21|0\n火龍果|半顆|70|1|16|0", "甜點零食": "堅果|1 小把 25 g|160|5|5|14\n黑巧克力|3 格 30 g|170|2|13|12\n洋芋片|1 包 50 g|270|3|27|17\n蘇打餅|3 片|110|2|16|4\n鳳梨酥|1 個|200|2|28|9\n台式菠蘿麵包|1 個|350|7|50|13\n紅豆麵包|1 個|280|7|50|6\n蔥花麵包|1 個|300|8|40|12\n肉鬆麵包|1 個|330|9|40|15\n甜甜圈|1 個|250|3|30|13\n鮮奶油蛋糕|1 片|300|4|35|16\n起司蛋糕|1 片|350|6|25|25\n冰淇淋|1 球|140|2|16|7\n蛋捲|3 支|150|2|20|7\n牛軋糖|3 顆|130|2|18|5\n花生豆花|1 碗|250|8|40|6\n愛玉|1 碗|120|0|30|0\n燒仙草|1 碗|300|3|65|3\n芒果冰|1 份|450|4|100|3"};
+const FOOD_CATS=Object.keys(FOOD_DB);
+const FOODS=FOOD_CATS.flatMap(cat=>FOOD_DB[cat].split("\n").map((l,i)=>{const [n,u,k,p,c,f,su]=l.split("|");return {id:cat+i,n,u,k:+k,p:+p,c:+c,f:+f,cat,s:su?+su:null}}));
+const SUGAR=[["全糖",1],["少糖",.7],["半糖",.5],["微糖",.3],["一分糖",.1],["無糖",0]];
 const ACTS=[["快走",4.3],["散步",3],["慢跑",8],["力量訓練",5],["瑜伽",3],["皮拉提斯",3.5],["飛輪",7],["游泳",6],["間歇訓練",8],["跳舞",5],["爬樓梯",8]];
 const WEEK=[
  {type:"快走",min:30,desc:"保持能說話但略喘的速度，飯後 30 分鐘內開始最好。"},
@@ -584,7 +585,7 @@ function screenFood(){
     </div></section>
    ${x.meals.length?slots.map(s=>{const items=x.meals.filter(m=>m.slot===s);const k=items.reduce((a,m)=>a+(+m.kcal||0),0);
      return `<section class="card meal"><div class="mh"><div><h2 class="h2">${s}</h2>${items.length?`<div class="cap num">${nf(k)} kcal</div>`:""}</div><button class="btn ghost" data-act="sheet" data-arg="meal" data-slot="${s}">＋ 新增</button></div>
-     ${items.map(m=>`<div class="it"><div class="nm"><div>${esc(m.name)}</div><div class="cap num">${esc(m.portion||"")}${m.portion?" · ":""}蛋白質 ${nf(m.p)} g</div></div><span class="num">${nf(m.kcal)}<span class="unit">kcal</span></span><button class="x" data-act="delMeal" data-arg="${m.id}" aria-label="刪除 ${esc(m.name)}">${ic("close")}</button></div>`).join("")}</section>`}).join("")
+     ${items.map(m=>`<div class="it"><div class="nm"><div>${esc(m.name)}</div><div class="cap num">${[m.portion,m.p?"蛋白質 "+nf(m.p)+" g":""].filter(Boolean).map(esc).join(" · ")}</div></div>${m.nok?`<span class="cap">未填熱量</span>`:`<span class="num">${nf(m.kcal)}<span class="unit">kcal</span></span>`}<button class="x" data-act="delMeal" data-arg="${m.id}" aria-label="刪除 ${esc(m.name)}">${ic("close")}</button></div>`).join("")}</section>`}).join("")
    :`<section class="card empty">${ART.meal}<h2 class="h2">${isToday?"今天還沒有飲食紀錄":"這天沒有飲食紀錄"}</h2><p class="cap" style="margin:0">記下第一餐，熱量和蛋白質會自動計算。</p><button class="btn" data-act="sheet" data-arg="meal">記錄${isToday?guessSlot():"一餐"}</button></section>`}
   </div>`;
 }
@@ -831,24 +832,45 @@ const fld=(id,label,{type="number",val="",unit="",step="0.1",ph="",req=false}={}
 
 function sheetMeal(slot){
   slot=slot||guessSlot();
-  const recent=[];const seen=new Set();S.meals.slice().reverse().forEach(m=>{if(!seen.has(m.name)&&recent.length<6){seen.add(m.name);recent.push(m)}});
-  openSheet(`${shHead("記錄飲食")}<form class="form" data-form="meal">
+  const recent=[];const seen=new Set();S.meals.slice().reverse().forEach(m=>{if(!seen.has(m.name)&&recent.length<8){seen.add(m.name);recent.push(m)}});
+  const cats=["常用",...FOOD_CATS].concat(S.foods.length?["我的食物"]:[]);
+  openSheet(`${shHead("記錄飲食")}<form class="form" data-form="meal" novalidate>
    <div class="seg" id="slotSeg">${["早餐","午餐","晚餐","點心"].map(s=>`<button type="button" class="${s===slot?"on":""}" data-act="slot" data-arg="${s}">${s}</button>`).join("")}</div>
-   ${recent.length?`<div><div class="cap" style="margin-bottom:8px">最近吃過，點一下就加入</div><div class="chips">${recent.map(m=>`<button type="button" class="chip" data-act="quickMeal" data-arg="${esc(m.name)}">${esc(m.name)} <span class="num muted">${m.kcal}</span></button>`).join("")}</div></div>`:""}
-   <div class="f"><label for="fq">搜尋常見食物</label><input id="fq" type="search" placeholder="例如：雞胸、豆漿、便當" autocomplete="off"></div>
-   <div class="srch" id="flist">${foodList("")}</div>
-   <div class="grid2">${fld("mname","名稱",{type:"text",ph:"自訂食物",req:true})}${fld("mportion","份量",{type:"text",ph:"1 份"})}</div>
-   <div class="grid2">${fld("mkcal","熱量",{unit:"kcal",step:"1",req:true})}${fld("mp","蛋白質",{unit:"g",step:"0.1"})}</div>
-   <div class="grid2">${fld("mc","碳水",{unit:"g"})}${fld("mf","脂肪",{unit:"g"})}</div>
+   ${recent.length?`<div><div class="cap" style="margin-bottom:8px">最近吃過，點一下就加入</div><div class="chips">${recent.map(m=>`<button type="button" class="chip" data-act="quickMeal" data-arg="${esc(m.name)}">${esc(m.name)}${m.kcal?` <span class="num muted">${m.kcal}</span>`:""}</button>`).join("")}</div></div>`:""}
+   <div class="f"><label for="fq">搜尋食物</label><input id="fq" type="search" placeholder="例如：蛋餅、珍奶、叉燒飯、菠蘿油" autocomplete="off"></div>
+   <div class="cats" id="fcats">${cats.map(c=>`<button type="button" class="chip sm ${c==="常用"?"on":""}" data-act="fcat" data-arg="${c}">${c}</button>`).join("")}</div>
+   <div class="srch" id="flist">${foodList("常用","")}</div>
+   <div class="card pick" id="fpick" hidden></div>
+   <div class="ov" style="margin-top:6px">自行輸入 · 只有名稱必填</div>
+   <div class="grid2">${fld("mname","名稱",{type:"text",ph:"例如：媽媽煮的湯"})}${fld("mportion","份量（選填）",{type:"text",ph:"1 份"})}</div>
+   <div class="grid2">${fld("mkcal","熱量（選填）",{unit:"kcal",step:"1"})}${fld("mp","蛋白質（選填）",{unit:"g",step:"0.1"})}</div>
+   <div class="grid2">${fld("mc","碳水（選填）",{unit:"g"})}${fld("mf","脂肪（選填）",{unit:"g"})}</div>
    <label class="toggle"><span class="cap" style="color:var(--ink)">存到我的食物，下次直接選</span><button type="button" class="sw" data-act="sw" data-arg="msave" aria-pressed="false"></button></label>
-   <button class="btn block" type="submit">加入${slot}</button></form>`,{slot,msave:false});
+   <button class="btn block" type="submit">加入${slot}</button></form>`,{slot,msave:false,cat:"常用",q:"",food:null,mult:1,sugar:"半糖"});
 }
-function foodList(q){
-  const mine=S.foods.map(f=>[f.name,f.portion,f.kcal,f.p,f.c,f.f,1]);
-  const all=mine.concat(FOODS);const qq=q.trim();
-  const list=(qq?all.filter(f=>f[0].includes(qq)):all).slice(0,40);
-  if(!list.length)return `<div class="hint" style="padding:14px">找不到「${esc(qq)}」，在下方自行輸入即可。</div>`;
-  return list.map((f,i)=>`<button type="button" data-act="pickFood" data-arg="${esc(f[0])}|${esc(f[1])}|${f[2]}|${f[3]}|${f[4]}|${f[5]}"><span>${esc(f[0])} <span class="cap">${esc(f[1])}${f[6]?" · 我的":""}</span></span><span class="num cap">${f[2]} kcal · ${f[3]} g</span></button>`).join("");
+const COMMON=["無糖豆漿","茶葉蛋","原味蛋餅","火腿蛋吐司","鮪魚飯糰","超商舒肥雞胸","雞腿便當","滷肉飯","牛肉麵","珍珠奶茶","鮮奶茶","拿鐵","叉燒飯","菠蘿油","港式奶茶","雞胸肉","白飯","燙青菜","香蕉","希臘優格"];
+function allFoods(){return S.foods.map((f,i)=>({id:"m"+i,n:f.name,u:f.portion||"1 份",k:+f.kcal||0,p:+f.p||0,c:+f.c||0,f:+f.f||0,cat:"我的食物",s:null,nok:f.kcal==null||f.kcal===""})).concat(FOODS)}
+function foodList(cat,q){
+  const all=allFoods();q=(q||"").trim();
+  let list=q?all.filter(f=>f.n.includes(q)||f.cat.includes(q)):cat==="常用"?S.foods.length?all.filter(f=>f.cat==="我的食物").slice(0,6).concat(COMMON.map(n=>FOODS.find(f=>f.n===n)).filter(Boolean)):COMMON.map(n=>FOODS.find(f=>f.n===n)).filter(Boolean):all.filter(f=>f.cat===cat);
+  list=list.slice(0,120);
+  if(!list.length)return `<div class="hint" style="padding:14px">找不到「${esc(q)}」，在下方輸入名稱就能加入，熱量不知道可以先空著。</div>`;
+  return list.map(f=>`<button type="button" data-act="pickFood" data-arg="${esc(f.id)}"><span style="min-width:0"><span>${esc(f.n)}</span> <span class="cap">${esc(f.u)}${q?" · "+esc(f.cat):""}</span></span><span class="num cap" style="flex:none">${f.nok?"未填熱量":(f.s?"全糖 ":"")+(f.k+(f.s||0))+" kcal"}</span></button>`).join("");
+}
+function pickCalc(){
+  const F=sheetCtx.food,m=sheetCtx.mult;if(!F)return null;
+  const r=F.s!=null?(SUGAR.find(z=>z[0]===sheetCtx.sugar)||SUGAR[2])[1]:0,sk=F.s?F.s*r:0;
+  return {name:F.n+(F.s!=null?"（"+sheetCtx.sugar+"）":""),portion:(m===1?"":m+" × ")+F.u,kcal:F.nok?null:Math.round((F.k+sk)*m),p:r1(F.p*m),c:r1((F.c+sk/4)*m),f:r1(F.f*m)};
+}
+function renderPick(){
+  const el=$("#fpick"),F=sheetCtx.food;if(!el)return;if(!F){el.hidden=true;return}
+  const v=pickCalc();
+  el.hidden=false;
+  el.innerHTML=`<div class="sec-h" style="align-items:flex-start"><div style="min-width:0"><div style="font-weight:600">${esc(F.n)}</div><div class="cap">${esc(F.u)} · ${esc(F.cat)}</div></div><button type="button" class="x" data-act="unpick" aria-label="取消選擇">${ic("close")}</button></div>
+   <div class="cap" style="margin:14px 0 8px">份數</div><div class="chips">${[0.5,1,1.5,2,3].map(m=>`<button type="button" class="chip sm num ${m===sheetCtx.mult?"on":""}" data-act="mult" data-arg="${m}">${m} 份</button>`).join("")}</div>
+   ${F.s!=null?`<div class="cap" style="margin:14px 0 8px">甜度</div><div class="chips">${SUGAR.map(([l])=>`<button type="button" class="chip sm ${l===sheetCtx.sugar?"on":""}" data-act="sugar" data-arg="${l}">${l}</button>`).join("")}</div>`:""}
+   <div class="pick-sum"><span class="num" style="font:300 30px/1 var(--font-sans)">${v.kcal==null?"—":nf(v.kcal)}</span><span class="unit">kcal</span><span class="cap" style="margin-left:auto">蛋白質 ${nf(v.p,1)} g · 碳水 ${nf(v.c,0)} g · 脂肪 ${nf(v.f,0)} g</span></div>
+   <button type="button" class="btn block" data-act="addPick">加入${sheetCtx.slot}</button>`;
 }
 function sheetAct(type,min){
   openSheet(`${shHead("記錄活動")}<form class="form" data-form="act">
@@ -975,8 +997,12 @@ document.addEventListener("click",e=>{
     case "water":{const d=today();S.water[d]=Math.max(0,(S.water[d]||0)+(+v));save();if(b.dataset.keep){sheetWater()}else{}render();toast(+v>0?"已加入 "+v+" ml":"已減少 "+(-v)+" ml");break}
     case "fday":{const n=addDays(foodDate,+v);if(n<=today()){foodDate=n;render()}break}
     case "slot":sheetCtx.slot=v;document.querySelectorAll("#slotSeg button").forEach(x=>x.classList.toggle("on",x.dataset.arg===v));$("[data-form=meal] [type=submit]").textContent="加入"+v;break;
-    case "pickFood":{const [n,p,k,pr,c,f]=v.split("|");$("#mname").value=n;$("#mportion").value=p;$("#mkcal").value=k;$("#mp").value=pr;$("#mc").value=c;$("#mf").value=f;
-      document.querySelectorAll("#flist button").forEach(x=>x.classList.toggle("on",x===b));break}
+    case "pickFood":{const F=allFoods().find(f=>f.id===v);if(!F)break;sheetCtx.food=F;sheetCtx.mult=1;document.querySelectorAll("#flist button").forEach(x=>x.classList.toggle("on",x===b));renderPick();$("#fpick").scrollIntoView({block:"nearest",behavior:"smooth"});break}
+    case "unpick":sheetCtx.food=null;document.querySelectorAll("#flist button").forEach(x=>x.classList.remove("on"));renderPick();break;
+    case "mult":sheetCtx.mult=+v;renderPick();break;
+    case "sugar":sheetCtx.sugar=v;renderPick();break;
+    case "addPick":{const c=pickCalc();if(!c)break;S.meals.push({id:uid(),date:tab==="food"?foodDate:today(),slot:sheetCtx.slot,name:c.name,portion:c.portion,kcal:c.kcal||0,nok:c.kcal==null,p:c.p,c:c.c,f:c.f});closeSheet();commit("已加入 "+c.name);break}
+    case "fcat":sheetCtx.cat=v;sheetCtx.q="";$("#fq").value="";document.querySelectorAll("#fcats .chip").forEach(x=>x.classList.toggle("on",x===b));$("#flist").innerHTML=foodList(v,"");$("#flist").scrollTop=0;break;
     case "quickMeal":{const m=S.meals.slice().reverse().find(x=>x.name===v);if(m){S.meals.push({...m,id:uid(),date:tab==="food"?foodDate:today(),slot:sheetCtx.slot});closeSheet();commit("已加入 "+m.name)}break}
     case "sw":{sheetCtx[v]=!sheetCtx[v];b.classList.toggle("on",sheetCtx[v]);b.setAttribute("aria-pressed",sheetCtx[v]);break}
     case "pickAct":sheetCtx.atype=v;document.querySelectorAll("#actChips .chip").forEach(x=>x.classList.toggle("on",x.dataset.arg===v));estAct();break;
@@ -1018,16 +1044,16 @@ document.addEventListener("click",e=>{
   }
 });
 document.addEventListener("input",e=>{
-  if(e.target.id==="fq")$("#flist").innerHTML=foodList(e.target.value);
+  if(e.target.id==="fq"){sheetCtx.q=e.target.value;$("#flist").innerHTML=foodList(sheetCtx.cat,e.target.value)}
   if(e.target.id==="amin")estAct();
 });
 document.addEventListener("submit",e=>{
   const f=e.target.closest("[data-form]");if(!f)return;e.preventDefault();
   const g=id=>{const el=f.querySelector("#"+id);return el?el.value.trim():""},n=id=>{const v=g(id);return v===""?null:+v};
   switch(f.dataset.form){
-    case "meal":{const name=g("mname"),kcal=n("mkcal");if(!name||kcal==null)return;
-      const m={id:uid(),date:foodDate&&tab==="food"?foodDate:today(),slot:sheetCtx.slot,name,portion:g("mportion"),kcal:Math.round(kcal),p:n("mp")||0,c:n("mc")||0,f:n("mf")||0};
-      S.meals.push(m);if(sheetCtx.msave&&!S.foods.some(x=>x.name===name))S.foods.push({name,portion:m.portion,kcal:m.kcal,p:m.p,c:m.c,f:m.f});
+    case "meal":{const name=g("mname"),kcal=n("mkcal");if(!name){if(sheetCtx.food){$("[data-act=addPick]").click();return}$("#mname").focus();toast("請輸入食物名稱");return}
+      const m={id:uid(),date:tab==="food"?foodDate:today(),slot:sheetCtx.slot,name,portion:g("mportion"),kcal:kcal==null?0:Math.round(kcal),nok:kcal==null,p:n("mp")||0,c:n("mc")||0,f:n("mf")||0};
+      S.meals.push(m);if(sheetCtx.msave&&!S.foods.some(x=>x.name===name))S.foods.push({name,portion:m.portion,kcal:kcal==null?null:m.kcal,p:m.p,c:m.c,f:m.f});
       closeSheet();commit("已加入"+m.slot);break}
     case "act":{const min=n("amin");if(!min)return;const met=(ACTS.find(a=>a[0]===sheetCtx.atype)||[0,4])[1];
       S.acts.push({id:uid(),date:today(),type:sheetCtx.atype,min:Math.round(min),kcal:Math.round(met*(curW()||60)*min/60)});closeSheet();commit("已記錄 "+sheetCtx.atype);break}
@@ -1124,11 +1150,11 @@ function sampleData(){
   s.measures=[{id:uid(),date:st,waist:77.5,hip:96.0,chest:86.0,arm:28.5,thigh:55.0,calf:35.5},{id:uid(),date:addDays(st,7),waist:76.2,hip:95.4,chest:85.5,arm:28.2,thigh:54.4,calf:35.3}];
   const noise=[0,.2,-.1,.1,-.2,.15,-.05,.1,-.15,.05,-.1,0];
   for(let i=1;i<12;i++){if(i===9)continue;s.weights.push({date:addDays(st,i),kg:r1(60.4-i*0.14+noise[i])})}
-  const pick=n=>FOODS.find(f=>f[0]===n);
+  const pick=n=>FOODS.find(f=>f.n===n);
   const menus=[["早餐",["無糖豆漿","茶葉蛋","地瓜"]],["午餐",["雞腿便當"]],["點心",["希臘優格"]],["晚餐",["鮭魚","燙青菜","糙米飯"]]];
-  const menus2=[["早餐",["燕麥片","牛奶","香蕉"]],["午餐",["雞肉沙拉","鮪魚飯糰"]],["晚餐",["板豆腐","雞胸肉","燙青菜"]]];
+  const menus2=[["早餐",["燕麥片","鮮乳","香蕉"]],["午餐",["雞肉沙拉","鮪魚飯糰"]],["晚餐",["板豆腐","雞胸肉","燙青菜"]]];
   for(let i=0;i<=11;i++){const d=addDays(st,i);const mm=i%2?menus2:menus;
-    mm.forEach(([slot,items],si)=>{if(i===11&&si>1)return;items.forEach(n=>{const f=pick(n);s.meals.push({id:uid(),date:d,slot,name:f[0],portion:f[1],kcal:f[2],p:f[3],c:f[4],f:f[5]})})});
+    mm.forEach(([slot,items],si)=>{if(i===11&&si>1)return;items.forEach(n=>{const f=pick(n);s.meals.push({id:uid(),date:d,slot,name:f.n,portion:f.u,kcal:f.k,p:f.p,c:f.c,f:f.f})})});
     const pw=WEEK[i%7];if(i<11&&i!==6&&i!==3)s.acts.push({id:uid(),date:d,type:pw.type,min:pw.min,kcal:Math.round((ACTS.find(a=>a[0]===pw.type)||[0,4])[1]*59.5*pw.min/60)});
     s.water[d]=i===11?1000:[1800,2100,1600,2250,2000,1900,2300,1700,2150,2050,2200][i];
     s.steps[d]=i===11?3200:[6400,7200,5100,8300,8800,7600,6900,9100,8400,7700,8600][i];
